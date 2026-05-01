@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ตารางกะพนักงาน</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sarabun', sans-serif; background: #f4f6fb; color: #1a1a2e; min-height: 100vh; }
+
+    /* ── Top nav ── */
+    .topnav {
+      background: #fff; border-bottom: 1.5px solid #e2e8f0;
+      padding: 0 1rem; display: flex; align-items: center; gap: 6px; height: 56px;
+      overflow-x: auto; white-space: nowrap;
+    }
+    .nav-logo { font-size: 0.95rem; font-weight: 700; color: #2563eb; margin-right: 8px; flex-shrink: 0; }
+    .nav-btn {
+      padding: 6px 14px; font-family: 'Sarabun', sans-serif;
+      font-size: 0.82rem; font-weight: 600; border-radius: 8px;
+      cursor: pointer; border: 1.5px solid #d1d5db;
+      transition: all 0.15s; background: #fff; color: #374151;
+      flex-shrink: 0; white-space: nowrap;
+    }
+    .nav-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .nav-btn:not(.active):hover { background: #f3f4f6; border-color: #9ca3af; }
+
+    /* ── Pages ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── Page header ── */
+    .page-header {
+      background: #fff; border-bottom: 1.5px solid #e2e8f0;
+      padding: 1.1rem 1.5rem; display: flex; align-items: center; gap: 12px;
+    }
+    .page-icon {
+      width: 40px; height: 40px; background: #eff6ff; border: 1.5px solid #bfdbfe;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .page-header h1 { font-size: 1.1rem; font-weight: 700; color: #111827; }
+    .page-header p { font-size: 0.75rem; color: #6b7280; margin-top: 1px; }
+
+    /* ── Main ── */
+    .main { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+    /* ── Card ── */
+    .card {
+      background: #fff; border: 1.5px solid #e2e8f0; border-radius: 14px;
+      overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .card-header {
+      padding: 0.85rem 1.25rem; border-bottom: 1.5px solid #e2e8f0;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px; background: #f8fafc;
+    }
+    .card-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #374151; flex: 1; }
+
+    /* ── Week nav ── */
+    .week-nav { display: flex; align-items: center; gap: 6px; }
+    .wk-btn {
+      width: 30px; height: 30px; background: #fff; border: 1.5px solid #d1d5db;
+      border-radius: 7px; color: #374151; cursor: pointer; font-size: 13px;
+      display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+    }
+    .wk-btn:hover { background: #eff6ff; border-color: #93c5fd; color: #2563eb; }
+    .week-label {
+      font-size: 0.78rem; font-weight: 700; color: #111827; padding: 5px 11px;
+      background: #fff; border: 1.5px solid #d1d5db; border-radius: 7px; white-space: nowrap;
+    }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; min-width: 480px; }
+    thead th {
+      padding: 9px 8px; font-size: 0.76rem; font-weight: 700; color: #374151;
+      background: #f1f5f9; border-bottom: 2px solid #e2e8f0; text-align: center;
+    }
+    thead th:first-child { text-align: left; padding-left: 16px; width: 110px; }
+    tbody tr:nth-child(even) td { background: #fafbfc; }
+    tbody tr:hover td { background: #eff6ff !important; }
+    tbody td {
+      padding: 7px 6px; border-bottom: 1px solid #e9edf2;
+      text-align: center; vertical-align: middle; font-size: 0.85rem; color: #111827;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody td.day-cell { text-align: left; padding-left: 16px; background: #f8fafc !important; }
+    .day-name { font-size: 0.86rem; font-weight: 700; color: #111827; }
+    .day-date { font-size: 0.68rem; color: #6b7280; margin-top: 2px; }
+
+    /* ── Shift select ── */
+    select.shift-sel {
+      width: 100%; padding: 5px 20px 5px 7px;
+      background: #fff; border: 1.5px solid #d1d5db; border-radius: 7px;
+      color: #374151; font-family: 'Sarabun', sans-serif; font-size: 0.78rem; font-weight: 500;
+      cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 6px center; transition: border-color 0.15s;
+    }
+    select.shift-sel:focus { outline: none; border-color: #3b82f6; }
+    select.shift-sel.has-morning   { border-color: #3b82f6; background-color: #eff6ff; color: #1d4ed8; font-weight: 700; }
+    select.shift-sel.has-afternoon { border-color: #f59e0b; background-color: #fffbeb; color: #b45309; font-weight: 700; }
+    select.shift-sel.has-fullday   { border-color: #10b981; background-color: #ecfdf5; color: #065f46; font-weight: 700; }
+
+    /* ── Badges ── */
+    .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.76rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .badge-morning   { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-morning   .badge-dot { background: #3b82f6; }
+    .badge-afternoon { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .badge-afternoon .badge-dot { background: #f59e0b; }
+    .badge-fullday   { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    .badge-fullday   .badge-dot { background: #10b981; }
+    .badge-none { color: #9ca3af; font-size: 0.7rem; font-weight: 500; }
+
+    /* ── Footer bar ── */
+    .footer-bar {
+      padding: 0.85rem 1.25rem; border-top: 1.5px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; flex-wrap: wrap; background: #f8fafc;
+    }
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.73rem; color: #374151; font-weight: 500; }
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    .save-btn {
+      display: flex; align-items: center; gap: 7px; padding: 8px 20px;
+      background: #2563eb; color: #fff; font-family: 'Sarabun', sans-serif;
+      font-size: 0.875rem; font-weight: 700; border: none; border-radius: 9px;
+      cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+    }
+    .save-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .save-btn:active { transform: translateY(0); }
+
+    /* ── Saved card ── */
+    .saved-top {
+      padding: 0.85rem 1.25rem; border-bottom: 1.5px solid #e2e8f0;
+      display: flex; align-items: center; gap: 8px; background: #f8fafc; flex-wrap: wrap;
+    }
+    .saved-top .label { font-size: 0.78rem; font-weight: 700; color: #374151; letter-spacing: 0.05em; text-transform: uppercase; flex: 1; }
+    .saved-top .wtag {
+      font-size: 0.73rem; font-weight: 700; background: #eff6ff; color: #2563eb;
+      border: 1.5px solid #bfdbfe; padding: 3px 11px; border-radius: 20px; white-space: nowrap;
+    }
+
+    /* ── Wage page ── */
+    .wage-table-wrap { padding: 1.25rem; }
+    .wage-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .wage-row {
+      display: contents;
+    }
+    .wage-label-cell {
+      display: flex; align-items: center;
+      font-size: 0.9rem; font-weight: 600; color: #111827;
+      padding: 10px 14px; background: #f8fafc;
+      border: 1.5px solid #e2e8f0; border-radius: 9px;
+    }
+    .wage-input-cell {
+      display: flex; align-items: center;
+    }
+    .wage-input {
+      width: 100%; padding: 10px 12px;
+      background: #fff; border: 1.5px solid #d1d5db; border-radius: 9px;
+      font-family: 'Sarabun', sans-serif; font-size: 0.9rem; font-weight: 600; color: #111827;
+      transition: border-color 0.15s;
+    }
+    .wage-input:focus { outline: none; border-color: #3b82f6; }
+    .wage-unit { font-size: 0.78rem; color: #6b7280; margin-left: 8px; white-space: nowrap; }
+
+    .wage-save-btn {
+      display: flex; align-items: center; gap: 7px; padding: 9px 22px;
+      background: #059669; color: #fff; font-family: 'Sarabun', sans-serif;
+      font-size: 0.9rem; font-weight: 700; border: none; border-radius: 9px;
+      cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(5,150,105,0.25);
+    }
+    .wage-save-btn:hover { background: #047857; transform: translateY(-1px); }
+
+    /* ── Wage summary ── */
+    .wage-summary-wrap { padding: 1.25rem; }
+    .wage-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+    .wage-card {
+      background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px;
+      padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;
+    }
+    .wage-card-name { font-size: 0.85rem; font-weight: 700; color: #374151; }
+    .wage-card-detail { font-size: 0.72rem; color: #6b7280; }
+    .wage-card-amount { font-size: 1.1rem; font-weight: 700; color: #059669; margin-top: 4px; }
+
+    .wage-total-box {
+      background: #eff6ff; border: 2px solid #bfdbfe; border-radius: 12px;
+      padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .wage-total-label { font-size: 0.9rem; font-weight: 700; color: #1d4ed8; }
+    .wage-total-amount { font-size: 1.5rem; font-weight: 700; color: #1d4ed8; }
+
+    .no-data-msg { font-size: 0.85rem; color: #9ca3af; padding: 1rem 0; text-align: center; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #059669; color: #fff; font-family: 'Sarabun', sans-serif;
+      font-size: 0.82rem; font-weight: 700; padding: 9px 20px; border-radius: 10px;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s, transform 0.25s;
+      z-index: 9999; box-shadow: 0 6px 20px rgba(5,150,105,0.35);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 500px) {
+      .wage-grid, .wage-summary-grid { grid-template-columns: 1fr; }
+      .card-header { flex-direction: column; align-items: flex-start; }
+      .footer-bar { flex-direction: column; align-items: flex-start; }
+      .save-btn, .wage-save-btn { width: 100%; justify-content: center; }
+      .topnav { gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="topnav">
+  <span class="nav-logo">📅 กะพนักงาน</span>
+  <button class="nav-btn active" id="btn-cat"  onclick="showPage('cat')">🐱 บ้านแคท</button>
+  <button class="nav-btn"        id="btn-sala" onclick="showPage('sala')">🥟 บ้านซาลาเปา</button>
+  <button class="nav-btn"        id="btn-wage" onclick="showPage('wage')">💰 ค่าแรง</button>
+</nav>
+
+<!-- ═══════════════ PAGE: บ้านแคท ═══════════════ -->
+<div class="page active" id="page-cat">
+  <div class="page-header">
+    <div class="page-icon">🐱</div>
+    <div><h1>บ้านแคท</h1><p>ตารางกะประจำสัปดาห์</p></div>
+  </div>
+  <div class="main">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">กรอกตารางกะ</span>
+        <div class="week-nav">
+          <button class="wk-btn" onclick="changeWeek('cat',-1)">&#8592;</button>
+          <div class="week-label" id="week-label-cat"></div>
+          <button class="wk-btn" onclick="changeWeek('cat',1)">&#8594;</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>วัน</th><th>พี่โบว์</th><th>เติ้ล</th><th>บี</th><th>ซาลาเปา</th><th>แคท</th></tr></thead>
+        <tbody id="body-cat"></tbody></table>
+      </div>
+      <div class="footer-bar">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>กะเช้า</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>กะบ่าย</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>เต็มวัน</div>
+        </div>
+        <button class="save-btn" onclick="saveSchedule('cat')">💾 บันทึกตาราง</button>
+      </div>
+    </div>
+
+    <div id="saved-wrap-cat" style="display:none">
+      <div class="card">
+        <div class="saved-top">
+          <span class="label">บ้านแคท</span>
+          <span class="wtag" id="saved-tag-cat"></span>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr id="saved-thead-cat"><th>วัน</th></tr></thead>
+          <tbody id="saved-body-cat"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ค่าแรงรวม สำหรับ บ้านแคท -->
+      <div class="card" id="wage-result-cat" style="display:none">
+        <div class="card-header"><span class="card-title">💰 สรุปค่าแรงประจำสัปดาห์</span></div>
+        <div class="wage-summary-wrap">
+          <div class="wage-summary-grid" id="wage-cards-cat"></div>
+          <div class="wage-total-box">
+            <span class="wage-total-label">💵 รวมค่าแรงทั้งหมด</span>
+            <span class="wage-total-amount" id="wage-total-cat">฿0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE: บ้านซาลาเปา ═══════════════ -->
+<div class="page" id="page-sala">
+  <div class="page-header">
+    <div class="page-icon">🥟</div>
+    <div><h1>บ้านซาลาเปา</h1><p>ตารางกะประจำสัปดาห์</p></div>
+  </div>
+  <div class="main">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">กรอกตารางกะ</span>
+        <div class="week-nav">
+          <button class="wk-btn" onclick="changeWeek('sala',-1)">&#8592;</button>
+          <div class="week-label" id="week-label-sala"></div>
+          <button class="wk-btn" onclick="changeWeek('sala',1)">&#8594;</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>วัน</th><th>พี่โบว์</th><th>เติ้ล</th><th>บี</th><th>ซาลาเปา</th><th>แคท</th></tr></thead>
+        <tbody id="body-sala"></tbody></table>
+      </div>
+      <div class="footer-bar">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>กะเช้า</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>กะบ่าย</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>เต็มวัน</div>
+        </div>
+        <button class="save-btn" onclick="saveSchedule('sala')">💾 บันทึกตาราง</button>
+      </div>
+    </div>
+
+    <div id="saved-wrap-sala" style="display:none">
+      <div class="card">
+        <div class="saved-top">
+          <span class="label">บ้านซาลาเปา</span>
+          <span class="wtag" id="saved-tag-sala"></span>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr id="saved-thead-sala"><th>วัน</th></tr></thead>
+          <tbody id="saved-body-sala"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ค่าแรงรวม สำหรับ บ้านซาลาเปา -->
+      <div class="card" id="wage-result-sala" style="display:none">
+        <div class="card-header"><span class="card-title">💰 สรุปค่าแรงประจำสัปดาห์</span></div>
+        <div class="wage-summary-wrap">
+          <div class="wage-summary-grid" id="wage-cards-sala"></div>
+          <div class="wage-total-box">
+            <span class="wage-total-label">💵 รวมค่าแรงทั้งหมด</span>
+            <span class="wage-total-amount" id="wage-total-sala">฿0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE: ค่าแรง ═══════════════ -->
+<div class="page" id="page-wage">
+  <div class="page-header">
+    <div class="page-icon">💰</div>
+    <div><h1>กรอกค่าแรง</h1><p>ค่าแรงต่อ 1 กะ (เต็มวัน = 2 กะ)</p></div>
+  </div>
+  <div class="main">
+    <div class="card">
+      <div class="card-header"><span class="card-title">ค่าแรงพนักงาน</span></div>
+      <div class="wage-table-wrap">
+        <div class="wage-grid" id="wage-grid"></div>
+      </div>
+      <div class="footer-bar" style="justify-content:flex-end">
+        <button class="wage-save-btn" onclick="saveWages()">✅ บันทึกค่าแรง</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DAY_NAMES = ['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','อาทิตย์'];
+const NAMES    = ['พี่โบว์','เติ้ล','บี','ซาลาเปา','แคท'];
+const SHIFTS   = [
+  { value:'', label:'— เลือกกะ —' },
+  { value:'morning', label:'กะเช้า' },
+  { value:'afternoon', label:'กะบ่าย' },
+  { value:'fullday', label:'เต็มวัน' },
+];
+
+const state = {
+  cat:  { monday: getThisMonday(new Date()), saved: null },
+  sala: { monday: getThisMonday(new Date()), saved: null },
+};
+
+// ค่าแรง default
+let wages = [450, 450, 450, 450, 450];
+
+/* ── Helpers ── */
+function getThisMonday(date) {
+  const d = new Date(date); const day = d.getDay();
+  d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day)); d.setHours(0,0,0,0); return d;
+}
+function addDays(date, n) { const d = new Date(date); d.setDate(d.getDate() + n); return d; }
+function fmt(date) {
+  return String(date.getDate()).padStart(2,'0') + '/' +
+         String(date.getMonth()+1).padStart(2,'0') + '/' +
+         (date.getFullYear() + 543);
+}
+function weekLabel(monday) { return `${fmt(monday)} — ${fmt(addDays(monday,6))}`; }
+function shiftCount(v) { return v === 'fullday' ? 2 : (v ? 1 : 0); }
+function numFmt(n) { return '฿' + n.toLocaleString('th-TH'); }
+
+/* ── Build input table ── */
+function buildTable(id) {
+  document.getElementById(`week-label-${id}`).textContent = weekLabel(state[id].monday);
+  const tbody = document.getElementById(`body-${id}`);
+  tbody.innerHTML = '';
+  DAY_NAMES.forEach((day, di) => {
+    const date = addDays(state[id].monday, di);
+    const tr = document.createElement('tr');
+    const td0 = document.createElement('td'); td0.className = 'day-cell';
+    td0.innerHTML = `<div class="day-name">${day}</div><div class="day-date">${fmt(date)}</div>`;
+    tr.appendChild(td0);
+    NAMES.forEach((_, ni) => {
+      const td = document.createElement('td');
+      const sel = document.createElement('select'); sel.className = 'shift-sel';
+      sel.dataset.day = di; sel.dataset.person = ni;
+      SHIFTS.forEach(s => { const opt = document.createElement('option'); opt.value = s.value; opt.textContent = s.label; sel.appendChild(opt); });
+      sel.addEventListener('change', function() { this.className = 'shift-sel' + (this.value ? ` has-${this.value}` : ''); });
+      td.appendChild(sel); tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+function changeWeek(id, dir) { state[id].monday = addDays(state[id].monday, dir*7); buildTable(id); }
+
+/* ── Badge ── */
+function badgeHtml(v) {
+  if (v === 'morning')   return `<span class="badge badge-morning"><span class="badge-dot"></span>กะเช้า</span>`;
+  if (v === 'afternoon') return `<span class="badge badge-afternoon"><span class="badge-dot"></span>กะบ่าย</span>`;
+  if (v === 'fullday')   return `<span class="badge badge-fullday"><span class="badge-dot"></span>เต็มวัน</span>`;
+  return '';
+}
+
+/* ── Save schedule ── */
+function saveSchedule(id) {
+  const selects = document.querySelectorAll(`#body-${id} select`);
+  const data = Array.from({length:7}, () => Array(5).fill(''));
+  selects.forEach(sel => { data[sel.dataset.day][sel.dataset.person] = sel.value; });
+  state[id].saved = { monday: new Date(state[id].monday), label: weekLabel(state[id].monday), data };
+  renderSaved(id);
+  showToast('💾 บันทึกตารางเรียบร้อยแล้ว');
+}
+
+/* ── Render saved table + wage summary ── */
+function renderSaved(id) {
+  const rec = state[id].saved;
+  document.getElementById(`saved-wrap-${id}`).style.display = 'block';
+  document.getElementById(`saved-tag-${id}`).textContent = rec.label;
+
+  const activePersons = NAMES.reduce((acc, _, ni) => { if (rec.data.some(row => row[ni] !== '')) acc.push(ni); return acc; }, []);
+
+  // thead
+  const thead = document.getElementById(`saved-thead-${id}`);
+  thead.innerHTML = '<th>วัน</th>';
+  activePersons.forEach(ni => { const th = document.createElement('th'); th.textContent = NAMES[ni]; thead.appendChild(th); });
+
+  // tbody
+  const tbody = document.getElementById(`saved-body-${id}`);
+  tbody.innerHTML = '';
+  DAY_NAMES.forEach((day, di) => {
+    const date = addDays(rec.monday, di);
+    const tr = document.createElement('tr');
+    const td0 = document.createElement('td'); td0.className = 'day-cell';
+    td0.innerHTML = `<div class="day-name">${day}</div><div class="day-date">${fmt(date)}</div>`;
+    tr.appendChild(td0);
+    activePersons.forEach(ni => {
+      const td = document.createElement('td');
+      const b = badgeHtml(rec.data[di][ni]);
+      td.innerHTML = b || '<span class="badge-none">—</span>';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+
+  // wage summary
+  renderWageSummary(id);
+}
+
+function renderWageSummary(id) {
+  const rec = state[id].saved;
+  if (!rec) return;
+
+  // คำนวณกะแต่ละคน
+  const totals = NAMES.map((name, ni) => {
+    let shifts = 0;
+    rec.data.forEach(row => { shifts += shiftCount(row[ni]); });
+    const amount = shifts * wages[ni];
+    return { name, shifts, amount };
+  }).filter(p => p.shifts > 0);
+
+  const resultEl = document.getElementById(`wage-result-${id}`);
+  const cardsEl  = document.getElementById(`wage-cards-${id}`);
+  const totalEl  = document.getElementById(`wage-total-${id}`);
+
+  if (totals.length === 0) { resultEl.style.display = 'none'; return; }
+  resultEl.style.display = 'block';
+
+  cardsEl.innerHTML = '';
+  let grandTotal = 0;
+  totals.forEach(p => {
+    grandTotal += p.amount;
+    const card = document.createElement('div'); card.className = 'wage-card';
+    card.innerHTML = `
+      <div class="wage-card-name">👤 ${p.name}</div>
+      <div class="wage-card-detail">${p.shifts} กะ × ${numFmt(wages[NAMES.indexOf(p.name)])} / กะ</div>
+      <div class="wage-card-amount">${numFmt(p.amount)}</div>
+    `;
+    cardsEl.appendChild(card);
+  });
+  totalEl.textContent = numFmt(grandTotal);
+}
+
+/* ── Wage page ── */
+function buildWageGrid() {
+  const grid = document.getElementById('wage-grid');
+  grid.innerHTML = '';
+  NAMES.forEach((name, ni) => {
+    const label = document.createElement('div'); label.className = 'wage-label-cell';
+    label.textContent = name;
+
+    const inputWrap = document.createElement('div'); inputWrap.className = 'wage-input-cell';
+    const inp = document.createElement('input');
+    inp.type = 'number'; inp.className = 'wage-input'; inp.min = 0;
+    inp.id = `wage-inp-${ni}`; inp.value = wages[ni]; inp.placeholder = '0';
+    const unit = document.createElement('span'); unit.className = 'wage-unit'; unit.textContent = 'บาท/กะ';
+    inputWrap.appendChild(inp); inputWrap.appendChild(unit);
+
+    grid.appendChild(label); grid.appendChild(inputWrap);
+  });
+}
+
+function saveWages() {
+  NAMES.forEach((_, ni) => {
+    const val = parseFloat(document.getElementById(`wage-inp-${ni}`).value) || 0;
+    wages[ni] = val;
+  });
+  // อัปเดตสรุปค่าแรงทั้ง 2 บ้าน
+  ['cat','sala'].forEach(id => { if (state[id].saved) renderWageSummary(id); });
+  showToast('✅ บันทึกค่าแรงเรียบร้อยแล้ว');
+}
+
+/* ── Page nav ── */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`page-${id}`).classList.add('active');
+  document.getElementById(`btn-${id}`).classList.add('active');
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg;
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ── Init ── */
+buildTable('cat');
+buildTable('sala');
+buildWageGrid();
+</script>
+</body>
+</html>

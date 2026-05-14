@@ -128,6 +128,8 @@
 <div class="page" id="page-wage"><div class="page-header"><div class="page-icon">💰</div><div><h1>กรอกค่าแรง</h1><p>ค่าแรงต่อ 1 กะ (เต็มวัน = 2 กะ)</p></div></div><div class="main"><div class="card"><div class="card-header"><span class="card-title">ค่าแรงพนักงาน</span></div><div class="wage-table-wrap"><div class="wage-grid" id="wage-grid"></div></div><div class="footer-bar" style="justify-content:flex-end"><button class="wage-save-btn" onclick="saveWages()">✅ บันทึกค่าแรง</button></div></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwKBIMw1Yk9cGYpmSd93Q7ifx8rna6hSD6nCOPJCBasas5STyYBMm-un8pgps7-lWV_/exec";
+
 const DAY_NAMES = ['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','อาทิตย์'];
 
 const PEOPLE = {
@@ -147,11 +149,11 @@ const state = {
 };
 
 let wages = {
-  'แคท':450,
+  'แคท':0,
   'บี':450,
-  'เติ้ล':450,
-  'เปา':450,
-  'อาโป':450
+  'เติ้ล':400,
+  'เปา':0,
+  'อาโป':200
 };
 
 function getThisMonday(date){
@@ -176,6 +178,17 @@ function fmt(date){
 
 function weekLabel(monday){
   return `${fmt(monday)} — ${fmt(addDays(monday,6))}`;
+}
+
+function weekKey(monday){
+  const y = monday.getFullYear();
+  const m = String(monday.getMonth()+1).padStart(2,'0');
+  const d = String(monday.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+
+function scheduleKey(id){
+  return `${id}_${weekKey(state[id].monday)}`;
 }
 
 function numFmt(n){
@@ -270,9 +283,10 @@ function buildTable(id){
 function changeWeek(id,dir){
   state[id].monday = addDays(state[id].monday, dir*7);
   buildTable(id);
+  loadSchedule(id);
 }
 
-function saveSchedule(id){
+async function saveSchedule(id){
   const data = Array.from({length:7}, () => {
     const row = {};
     SHIFT_TYPES.forEach(type => row[type.key] = '');
@@ -290,7 +304,17 @@ function saveSchedule(id){
   };
 
   renderSaved(id);
-  showToast('💾 บันทึกตารางเรียบร้อยแล้ว');
+  showToast('💾 กำลังบันทึก...');
+
+  await apiPost({
+    action:'saveSchedule',
+    key:scheduleKey(id),
+    house:id,
+    week:weekKey(state[id].monday),
+    data
+  });
+
+  showToast('✅ บันทึกลง Google Sheet แล้ว');
 }
 
 function badgeHtml(typeKey, name, date){
@@ -465,7 +489,7 @@ function buildWageGrid(){
   });
 }
 
-function saveWages(){
+async function saveWages(){
   const allPeople = [...new Set([...PEOPLE.cat, ...PEOPLE.sala])];
   allPeople.forEach(name => {
     wages[name] = parseFloat(document.getElementById(`wage-inp-${name}`).value) || 0;
@@ -475,7 +499,83 @@ function saveWages(){
     if(state[id].saved) renderWageSummary(id);
   });
 
-  showToast('✅ บันทึกค่าแรงเรียบร้อยแล้ว');
+  showToast('💾 กำลังบันทึกค่าแรง...');
+
+  await apiPost({
+    action:'saveWages',
+    data:wages
+  });
+
+  showToast('✅ บันทึกค่าแรงลง Google Sheet แล้ว');
+}
+
+async function apiPost(payload){
+  try{
+    await fetch(API_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body:JSON.stringify(payload)
+    });
+    return true;
+  }catch(err){
+    console.error(err);
+    showToast('❌ บันทึกไม่สำเร็จ');
+    return false;
+  }
+}
+
+async function apiGet(params){
+  const url = API_URL + '?' + new URLSearchParams(params).toString();
+  const res = await fetch(url);
+  return await res.json();
+}
+
+function setScheduleInputs(id,data){
+  document.querySelectorAll(`#body-${id} select`).forEach(sel => {
+    const val = data?.[sel.dataset.day]?.[sel.dataset.type] || '';
+    sel.value = val;
+    const cls = val ? personClass(val) : '';
+    sel.className = 'shift-sel' + (cls ? ` ${cls}` : '');
+  });
+}
+
+async function loadSchedule(id){
+  try{
+    const json = await apiGet({ action:'loadSchedule', key:scheduleKey(id) });
+    if(json?.ok && json?.data?.data){
+      state[id].saved = {
+        monday:new Date(state[id].monday),
+        label:weekLabel(state[id].monday),
+        data:json.data.data
+      };
+      setScheduleInputs(id,json.data.data);
+      renderSaved(id);
+    }else{
+      state[id].saved = null;
+      const wrap = document.getElementById(`saved-wrap-${id}`);
+      if(wrap) wrap.style.display = 'none';
+      renderCatPageAllWages();
+    }
+  }catch(err){
+    console.error(err);
+    showToast('⚠️ โหลดข้อมูลไม่สำเร็จ');
+  }
+}
+
+async function loadWages(){
+  try{
+    const json = await apiGet({ action:'loadWages' });
+    if(json?.ok && json?.data){
+      wages = { ...wages, ...json.data };
+      buildWageGrid();
+      ['cat','sala'].forEach(id => {
+        if(state[id].saved) renderWageSummary(id);
+      });
+    }
+  }catch(err){
+    console.error(err);
+  }
 }
 
 function showPage(id){
@@ -495,6 +595,9 @@ function showToast(msg){
 buildTable('cat');
 buildTable('sala');
 buildWageGrid();
+loadWages();
+loadSchedule('cat');
+loadSchedule('sala');
 </script>
 </body>
 </html>

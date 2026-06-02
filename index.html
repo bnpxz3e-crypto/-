@@ -475,6 +475,137 @@
       font-weight: 700;
     }
 
+
+    .person-color-red {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+    .person-color-red .badge-dot { background: #dc2626; }
+    select.shift-sel.person-color-red {
+      border-color: #dc2626;
+      background-color: #fee2e2;
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    .person-color-yellow {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+    .person-color-yellow .badge-dot { background: #f59e0b; }
+    select.shift-sel.person-color-yellow {
+      border-color: #f59e0b;
+      background-color: #fef3c7;
+      color: #92400e;
+      font-weight: 700;
+    }
+
+    .person-color-blue {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border: 1px solid #93c5fd;
+    }
+    .person-color-blue .badge-dot { background: #2563eb; }
+    select.shift-sel.person-color-blue {
+      border-color: #2563eb;
+      background-color: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    .person-color-black {
+      background: #111827;
+      color: #ffffff;
+      border: 1px solid #374151;
+    }
+    .person-color-black .badge-dot { background: #ffffff; }
+    select.shift-sel.person-color-black {
+      border-color: #111827;
+      background-color: #111827;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .person-color-green {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #86efac;
+    }
+    .person-color-green .badge-dot { background: #16a34a; }
+    select.shift-sel.person-color-green {
+      border-color: #16a34a;
+      background-color: #d1fae5;
+      color: #065f46;
+      font-weight: 700;
+    }
+
+    .person-color-purple {
+      background: #f3e8ff;
+      color: #6d28d9;
+      border: 1px solid #c4b5fd;
+    }
+    .person-color-purple .badge-dot { background: #8b5cf6; }
+    select.shift-sel.person-color-purple {
+      border-color: #8b5cf6;
+      background-color: #f3e8ff;
+      color: #6d28d9;
+      font-weight: 700;
+    }
+
+    .person-color-pink {
+      background: #fce7f3;
+      color: #be185d;
+      border: 1px solid #f9a8d4;
+    }
+    .person-color-pink .badge-dot { background: #ec4899; }
+    select.shift-sel.person-color-pink {
+      border-color: #ec4899;
+      background-color: #fce7f3;
+      color: #be185d;
+      font-weight: 700;
+    }
+
+    .person-color-sky {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .person-color-sky .badge-dot { background: #0284c7; }
+    select.shift-sel.person-color-sky {
+      border-color: #0284c7;
+      background-color: #e0f2fe;
+      color: #0369a1;
+      font-weight: 700;
+    }
+
+    .auto-three-noi {
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auto-three-noi .badge-none {
+      display: inline-block;
+    }
+
+    .wage-input-cell {
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .wage-input-cell .wage-input {
+      flex: 1 1 120px;
+    }
+
+    .wage-input-cell .color-select {
+      flex: 1 1 130px;
+      padding: 10px 10px;
+      font-size: 0.82rem;
+    }
+
     .badge-none {
       color: #9ca3af;
       font-size: 0.7rem;
@@ -648,13 +779,14 @@
 
     .employee-add-grid {
       display: grid;
-      grid-template-columns: 1fr 170px auto;
+      grid-template-columns: 1fr 160px 160px auto;
       gap: 10px;
       align-items: center;
     }
 
     .employee-input,
-    .employee-select {
+    .employee-select,
+    .color-select {
       width: 100%;
       padding: 10px 12px;
       background: #fff;
@@ -667,7 +799,8 @@
     }
 
     .employee-input:focus,
-    .employee-select:focus {
+    .employee-select:focus,
+    .color-select:focus {
       outline: none;
       border-color: #3b82f6;
     }
@@ -950,7 +1083,7 @@
             <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>กะบ่าย</div>
             <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>ช่วยลาว</div>
             <div class="legend-item"><div class="legend-dot" style="background:#111827"></div>ช่วยไทย</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>เสริมช่วง 3 นอย +50</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>เสริมช่วง 3 นอย</div>
           </div>
           <button class="save-btn" onclick="saveSchedule('sala')">💾 บันทึกตาราง</button>
         </div>
@@ -994,7 +1127,7 @@
       <div class="page-icon">💰</div>
       <div>
         <h1>กรอกค่าแรง</h1>
-        <p>ค่าแรงต่อ 1 กะ และเพิ่มชื่อพนักงานใหม่</p>
+        <p>ค่าแรงต่อ 1 กะ เพิ่มชื่อพนักงานใหม่ และเลือกสีชื่อคน</p>
       </div>
     </div>
 
@@ -1018,6 +1151,8 @@
               <option value="sala">บ้านซาลาเปา</option>
             </select>
 
+            <select id="new-employee-color" class="color-select"></select>
+
             <button class="employee-add-btn" onclick="addEmployee()">
               ➕ เพิ่มพนักงาน
             </button>
@@ -1025,7 +1160,7 @@
         </div>
 
         <div class="card-header">
-          <span class="card-title">ค่าแรงพนักงาน</span>
+          <span class="card-title">ค่าแรงพนักงาน + สีชื่อคน</span>
         </div>
 
         <div class="wage-table-wrap">
@@ -1051,6 +1186,25 @@
       sala: ['เปา','เติ้ล','บี','อาโป']
     };
 
+    const COLOR_OPTIONS = [
+      { key: 'red', label: 'แดง' },
+      { key: 'yellow', label: 'เหลือง' },
+      { key: 'blue', label: 'น้ำเงิน' },
+      { key: 'black', label: 'ดำ' },
+      { key: 'green', label: 'เขียว' },
+      { key: 'purple', label: 'ม่วง' },
+      { key: 'pink', label: 'ชมพู' },
+      { key: 'sky', label: 'ฟ้า' }
+    ];
+
+    let PERSON_COLORS = {
+      'แคท': 'red',
+      'บี': 'yellow',
+      'เติ้ล': 'blue',
+      'เปา': 'black',
+      'อาโป': 'green'
+    };
+
     const SHIFT_TYPES = [
       {
         key: 'morning',
@@ -1069,6 +1223,16 @@
         bonus: 0
       },
       {
+        key: 'three-noi',
+        label: '3 นอย',
+        cls: 'has-threenoi',
+        badge: 'badge-threenoi',
+        pay: 0,
+        bonus: 0,
+        autoFrom: 'morning',
+        houses: ['sala']
+      },
+      {
         key: 'help-lao',
         label: 'ช่วยลาว',
         cls: 'has-helplao',
@@ -1083,15 +1247,6 @@
         badge: 'badge-helpthai',
         pay: 0,
         bonus: 100
-      },
-      {
-        key: 'three-noi',
-        label: 'เสริมช่วง 3 นอย',
-        cls: 'has-threenoi',
-        badge: 'badge-threenoi',
-        pay: 0,
-        bonus: 50,
-        houses: ['sala']
       }
     ];
 
@@ -1161,13 +1316,46 @@
       return [...new Set([...PEOPLE.cat, ...PEOPLE.sala])];
     }
 
+    function colorLabel(colorKey) {
+      return COLOR_OPTIONS.find(c => c.key === colorKey)?.label || 'ฟ้า';
+    }
+
+    function colorSelectOptions(selectedKey = 'sky') {
+      return COLOR_OPTIONS.map(color => `
+        <option value="${color.key}" ${color.key === selectedKey ? 'selected' : ''}>
+          สี${color.label}
+        </option>
+      `).join('');
+    }
+
     function personClass(name) {
-      if (name === 'แคท') return 'person-cat';
-      if (name === 'บี') return 'person-bee';
-      if (name === 'เติ้ล') return 'person-toe';
-      if (name === 'เปา') return 'person-pao';
-      if (name === 'อาโป') return 'person-apo';
-      return 'person-custom';
+      const colorKey = PERSON_COLORS[name] || 'sky';
+      return `person-color-${colorKey}`;
+    }
+
+    function saveColorsLocal() {
+      localStorage.setItem('shift_person_colors', JSON.stringify(PERSON_COLORS));
+    }
+
+    function loadColorsLocal() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('shift_person_colors') || 'null');
+        if (saved && typeof saved === 'object') {
+          PERSON_COLORS = {
+            ...PERSON_COLORS,
+            ...saved
+          };
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderNewEmployeeColorSelect() {
+      const sel = document.getElementById('new-employee-color');
+      if (sel) {
+        sel.innerHTML = colorSelectOptions('sky');
+      }
     }
 
     function isThaiBonusDate(date) {
@@ -1180,6 +1368,7 @@
 
     function savePeopleLocal() {
       localStorage.setItem('shift_people', JSON.stringify(PEOPLE));
+      saveColorsLocal();
     }
 
     function loadPeopleLocal() {
@@ -1239,6 +1428,17 @@
             return;
           }
 
+          if (type.autoFrom) {
+            const autoBox = document.createElement('div');
+            autoBox.className = 'auto-three-noi';
+            autoBox.dataset.day = di;
+            autoBox.dataset.type = type.key;
+            autoBox.innerHTML = '<span class="badge-none">เลือกกะเช้าก่อน</span>';
+            td.appendChild(autoBox);
+            tr.appendChild(td);
+            return;
+          }
+
           const sel = document.createElement('select');
           sel.className = 'shift-sel';
           sel.dataset.day = di;
@@ -1258,6 +1458,10 @@
 
           sel.addEventListener('change', function() {
             this.className = 'shift-sel' + (this.value ? ` ${personClass(this.value)}` : '');
+
+            if (this.dataset.type === 'morning') {
+              updateAutoThreeNoi(id, this.dataset.day, this.value);
+            }
           });
 
           td.appendChild(sel);
@@ -1265,6 +1469,24 @@
         });
 
         tbody.appendChild(tr);
+      });
+    }
+
+    function updateAutoThreeNoi(id, dayIndex, name) {
+      const autoBox = document.querySelector(`#body-${id} .auto-three-noi[data-day="${dayIndex}"]`);
+      if (!autoBox) return;
+
+      if (!name) {
+        autoBox.innerHTML = '<span class="badge-none">เลือกกะเช้าก่อน</span>';
+        return;
+      }
+
+      autoBox.innerHTML = badgeHtml('three-noi', name, addDays(state[id].monday, Number(dayIndex)));
+    }
+
+    function updateAllAutoThreeNoi(id) {
+      document.querySelectorAll(`#body-${id} select[data-type="morning"]`).forEach(sel => {
+        updateAutoThreeNoi(id, sel.dataset.day, sel.value);
       });
     }
 
@@ -1283,6 +1505,14 @@
 
       document.querySelectorAll(`#body-${id} select`).forEach(sel => {
         data[sel.dataset.day][sel.dataset.type] = sel.value;
+      });
+
+      data.forEach(row => {
+        shiftTypesForHouse(id).forEach(type => {
+          if (type.autoFrom) {
+            row[type.key] = row[type.autoFrom] || '';
+          }
+        });
       });
 
       state[id].saved = {
@@ -1363,7 +1593,8 @@
           if (!isTypeAvailable(type, date)) {
             td.innerHTML = '<span class="badge-none">—</span>';
           } else {
-            td.innerHTML = badgeHtml(type.key, rec.data?.[di]?.[type.key] || '', date);
+            const savedName = rec.data?.[di]?.[type.key] || (type.autoFrom ? rec.data?.[di]?.[type.autoFrom] : '') || '';
+            td.innerHTML = badgeHtml(type.key, savedName, date);
           }
 
           tr.appendChild(td);
@@ -1510,9 +1741,18 @@
           wages[name] = 0;
         }
 
+        if (!PERSON_COLORS[name]) {
+          PERSON_COLORS[name] = 'sky';
+        }
+
         const label = document.createElement('div');
         label.className = 'wage-label-cell';
-        label.textContent = name;
+        label.innerHTML = `
+          <span class="badge ${personClass(name)}">
+            <span class="badge-dot"></span>
+            ${name}
+          </span>
+        `;
 
         const inputWrap = document.createElement('div');
         inputWrap.className = 'wage-input-cell';
@@ -1528,8 +1768,23 @@
         unit.className = 'wage-unit';
         unit.textContent = 'บาท/กะ';
 
+        const colorSel = document.createElement('select');
+        colorSel.className = 'color-select';
+        colorSel.id = `color-inp-${name}`;
+        colorSel.innerHTML = colorSelectOptions(PERSON_COLORS[name] || 'sky');
+        colorSel.addEventListener('change', function() {
+          PERSON_COLORS[name] = this.value;
+          saveColorsLocal();
+          buildTable('cat');
+          buildTable('sala');
+          if (state.cat.saved) renderSaved('cat');
+          if (state.sala.saved) renderSaved('sala');
+          buildWageGrid();
+        });
+
         inputWrap.appendChild(inp);
         inputWrap.appendChild(unit);
+        inputWrap.appendChild(colorSel);
         grid.appendChild(label);
         grid.appendChild(inputWrap);
       });
@@ -1538,9 +1793,11 @@
     async function addEmployee() {
       const nameInput = document.getElementById('new-employee-name');
       const houseInput = document.getElementById('new-employee-house');
+      const colorInput = document.getElementById('new-employee-color');
 
       const name = nameInput.value.trim();
       const house = houseInput.value;
+      const color = colorInput?.value || 'sky';
 
       if (!name) {
         showToast('⚠️ กรุณากรอกชื่อพนักงาน');
@@ -1563,6 +1820,8 @@
         wages[name] = 0;
       }
 
+      PERSON_COLORS[name] = color;
+
       savePeopleLocal();
 
       buildTable('cat');
@@ -1577,7 +1836,8 @@
         action: 'saveWages',
         data: {
           ...wages,
-          __people: PEOPLE
+          __people: PEOPLE,
+          __colors: PERSON_COLORS
         }
       });
 
@@ -1592,6 +1852,11 @@
         const inp = document.getElementById(`wage-inp-${name}`);
         if (inp) {
           wages[name] = parseFloat(inp.value) || 0;
+        }
+
+        const colorInp = document.getElementById(`color-inp-${name}`);
+        if (colorInp) {
+          PERSON_COLORS[name] = colorInp.value || 'sky';
         }
       });
 
@@ -1609,7 +1874,8 @@
         action: 'saveWages',
         data: {
           ...wages,
-          __people: PEOPLE
+          __people: PEOPLE,
+          __colors: PERSON_COLORS
         }
       });
 
@@ -1650,6 +1916,8 @@
         const cls = val ? personClass(val) : '';
         sel.className = 'shift-sel' + (cls ? ` ${cls}` : '');
       });
+
+      updateAllAutoThreeNoi(id);
     }
 
     async function loadSchedule(id) {
@@ -1689,6 +1957,14 @@
         });
 
         if (json?.ok && json?.data) {
+          if (json.data.__colors) {
+            PERSON_COLORS = {
+              ...PERSON_COLORS,
+              ...json.data.__colors
+            };
+            saveColorsLocal();
+          }
+
           if (json.data.__people) {
             PEOPLE = {
               cat: Array.isArray(json.data.__people.cat) ? json.data.__people.cat : PEOPLE.cat,
@@ -1703,6 +1979,7 @@
           };
 
           delete cleanWages.__people;
+          delete cleanWages.__colors;
 
           wages = {
             ...wages,
@@ -1744,6 +2021,8 @@
     }
 
     loadPeopleLocal();
+    loadColorsLocal();
+    renderNewEmployeeColorSelect();
 
     buildTable('cat');
     buildTable('sala');

@@ -1243,7 +1243,7 @@
 
     let PEOPLE = {
       cat: ['เอิญ','บี','เติ้ล','แคท','เปา'],
-      sala: ['เปา','แคท','มาย','เติ้ล','อาโป']
+      sala: ['มาย','เติ้ล','อาโป','เปา','แคท']
     };
 
     const COLOR_OPTIONS = [
@@ -1392,7 +1392,23 @@
       return true;
     }
 
+    const PREFERRED_PEOPLE_ORDER = {
+      cat: ['เอิญ','บี','เติ้ล','แคท','เปา'],
+      sala: ['มาย','เติ้ล','อาโป','เปา','แคท']
+    };
+
+    function normalizePeopleOrder() {
+      ['cat','sala'].forEach(house => {
+        const current = Array.isArray(PEOPLE[house]) ? PEOPLE[house] : [];
+        const preferred = PREFERRED_PEOPLE_ORDER[house] || [];
+        const ordered = preferred.filter(name => current.includes(name));
+        const extras = current.filter(name => !preferred.includes(name));
+        PEOPLE[house] = [...ordered, ...extras];
+      });
+    }
+
     function savePeopleLocal() {
+      normalizePeopleOrder();
       localStorage.setItem('shift_people_v3', JSON.stringify(PEOPLE));
       saveColorsLocal();
     }
@@ -1406,6 +1422,7 @@
             cat: Array.isArray(saved.cat) ? saved.cat : PEOPLE.cat,
             sala: Array.isArray(saved.sala) ? saved.sala : PEOPLE.sala
           };
+          normalizePeopleOrder();
         }
       } catch (err) {
         console.error(err);

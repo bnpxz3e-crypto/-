@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ตารางกะพนักงาน</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #f4f6fb;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    .topnav {
+      background: #fff;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 56px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .nav-logo {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #2563eb;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      padding: 6px 14px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1.5px solid #d1d5db;
+      transition: all 0.15s;
+      background: #fff;
+      color: #374151;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .nav-btn.active {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+
+    .nav-btn:not(.active):hover {
+      background: #f3f4f6;
+      border-color: #9ca3af;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .page-header {
+      background: #fff;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-icon {
+      width: 40px;
+      height: 40px;
+      background: #eff6ff;
+      border: 1.5px solid #bfdbfe;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .page-header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .page-header p {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 1px;
+    }
+
+    .main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem;
+    }
+
+    .card {
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .card-header {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1.5px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      background: #f8fafc;
+    }
+
+    .card-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #374151;
+      flex: 1;
+    }
+
+    .week-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .wk-btn {
+      width: 30px;
+      height: 30px;
+      background: #fff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      color: #374151;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .wk-btn:hover {
+      background: #eff6ff;
+      border-color: #93c5fd;
+      color: #2563eb;
+    }
+
+    .week-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #111827;
+      padding: 5px 11px;
+      background: #fff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 560px;
+    }
+
+    thead th {
+      padding: 9px 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #374151;
+      background: #f1f5f9;
+      border-bottom: 2px solid #e2e8f0;
+      text-align: center;
+    }
+
+    thead th:first-child {
+      text-align: left;
+      padding-left: 16px;
+      width: 110px;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #fafbfc;
+    }
+
+    tbody tr:hover td {
+      background: #eff6ff !important;
+    }
+
+    tbody td {
+      padding: 7px 6px;
+      border-bottom: 1px solid #e9edf2;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 0.85rem;
+      color: #111827;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody td.day-cell {
+      text-align: left;
+      padding-left: 16px;
+      background: #f8fafc !important;
+    }
+
+    .day-name {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .day-date {
+      font-size: 0.68rem;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    select.shift-sel {
+      width: 100%;
+      padding: 5px 20px 5px 7px;
+      background: #fff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      color: #374151;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 6px center;
+      transition: border-color 0.15s;
+    }
+
+    select.shift-sel:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    select.shift-sel.has-morning {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    select.shift-sel.has-afternoon {
+      border-color: #f59e0b;
+      background-color: #fffbeb;
+      color: #b45309;
+      font-weight: 700;
+    }
+
+    select.shift-sel.has-helplao {
+      border-color: #dc2626;
+      background-color: #fee2e2;
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    select.shift-sel.has-helpthai {
+      border-color: #111827;
+      background-color: #111827;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    select.shift-sel.has-threenoi {
+      border-color: #8b5cf6;
+      background-color: #f3e8ff;
+      color: #6d28d9;
+      font-weight: 700;
+    }
+
+    select.shift-sel.has-lao {
+      border-color: #10b981;
+      background-color: #ecfdf5;
+      color: #047857;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .badge-morning {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .badge-morning .badge-dot {
+      background: #3b82f6;
+    }
+
+    .badge-afternoon {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    .badge-afternoon .badge-dot {
+      background: #f59e0b;
+    }
+
+    .badge-helplao {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+
+    .badge-helplao .badge-dot {
+      background: #dc2626;
+    }
+
+    .badge-helpthai {
+      background: #111827;
+      color: #ffffff;
+      border: 1px solid #374151;
+    }
+
+    .badge-helpthai .badge-dot {
+      background: #ffffff;
+    }
+
+    .badge-threenoi {
+      background: #f3e8ff;
+      color: #6d28d9;
+      border: 1px solid #c4b5fd;
+    }
+
+    .badge-threenoi .badge-dot {
+      background: #8b5cf6;
+    }
+
+
+    .badge-lao {
+      background: #d1fae5;
+      color: #047857;
+      border: 1px solid #6ee7b7;
+    }
+
+    .badge-lao .badge-dot {
+      background: #10b981;
+    }
+
+    .person-cat {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+
+    .person-cat .badge-dot {
+      background: #dc2626;
+    }
+
+    .person-bee {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+
+    .person-bee .badge-dot {
+      background: #f59e0b;
+    }
+
+    .person-toe {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border: 1px solid #93c5fd;
+    }
+
+    .person-toe .badge-dot {
+      background: #2563eb;
+    }
+
+    .person-pao {
+      background: #111827;
+      color: #ffffff;
+      border: 1px solid #374151;
+    }
+
+    .person-pao .badge-dot {
+      background: #ffffff;
+    }
+
+    .person-apo {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #86efac;
+    }
+
+    .person-apo .badge-dot {
+      background: #16a34a;
+    }
+
+    .person-custom {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+
+    .person-custom .badge-dot {
+      background: #0284c7;
+    }
+
+    select.shift-sel.person-cat {
+      border-color: #dc2626;
+      background-color: #fee2e2;
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    select.shift-sel.person-bee {
+      border-color: #f59e0b;
+      background-color: #fef3c7;
+      color: #92400e;
+      font-weight: 700;
+    }
+
+    select.shift-sel.person-toe {
+      border-color: #2563eb;
+      background-color: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    select.shift-sel.person-pao {
+      border-color: #111827;
+      background-color: #111827;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    select.shift-sel.person-apo {
+      border-color: #16a34a;
+      background-color: #d1fae5;
+      color: #065f46;
+      font-weight: 700;
+    }
+
+    select.shift-sel.person-custom {
+      border-color: #0284c7;
+      background-color: #e0f2fe;
+      color: #0369a1;
+      font-weight: 700;
+    }
+
+
+    .person-color-red {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+    .person-color-red .badge-dot { background: #dc2626; }
+    select.shift-sel.person-color-red {
+      border-color: #dc2626;
+      background-color: #fee2e2;
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    .person-color-yellow {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+    .person-color-yellow .badge-dot { background: #f59e0b; }
+    select.shift-sel.person-color-yellow {
+      border-color: #f59e0b;
+      background-color: #fef3c7;
+      color: #92400e;
+      font-weight: 700;
+    }
+
+    .person-color-blue {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border: 1px solid #93c5fd;
+    }
+    .person-color-blue .badge-dot { background: #2563eb; }
+    select.shift-sel.person-color-blue {
+      border-color: #2563eb;
+      background-color: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    .person-color-black {
+      background: #111827;
+      color: #ffffff;
+      border: 1px solid #374151;
+    }
+    .person-color-black .badge-dot { background: #ffffff; }
+    select.shift-sel.person-color-black {
+      border-color: #111827;
+      background-color: #111827;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .person-color-green {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #86efac;
+    }
+    .person-color-green .badge-dot { background: #16a34a; }
+    select.shift-sel.person-color-green {
+      border-color: #16a34a;
+      background-color: #d1fae5;
+      color: #065f46;
+      font-weight: 700;
+    }
+
+    .person-color-purple {
+      background: #f3e8ff;
+      color: #6d28d9;
+      border: 1px solid #c4b5fd;
+    }
+    .person-color-purple .badge-dot { background: #8b5cf6; }
+    select.shift-sel.person-color-purple {
+      border-color: #8b5cf6;
+      background-color: #f3e8ff;
+      color: #6d28d9;
+      font-weight: 700;
+    }
+
+    .person-color-pink {
+      background: #fce7f3;
+      color: #be185d;
+      border: 1px solid #f9a8d4;
+    }
+    .person-color-pink .badge-dot { background: #ec4899; }
+    select.shift-sel.person-color-pink {
+      border-color: #ec4899;
+      background-color: #fce7f3;
+      color: #be185d;
+      font-weight: 700;
+    }
+
+    .person-color-sky {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .person-color-sky .badge-dot { background: #0284c7; }
+    select.shift-sel.person-color-sky {
+      border-color: #0284c7;
+      background-color: #e0f2fe;
+      color: #0369a1;
+      font-weight: 700;
+    }
+
+    .auto-three-noi {
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auto-three-noi .badge-none {
+      display: inline-block;
+    }
+
+    .wage-input-cell {
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .wage-input-cell .wage-input {
+      flex: 1 1 120px;
+    }
+
+    .wage-input-cell .color-select {
+      flex: 1 1 130px;
+      padding: 10px 10px;
+      font-size: 0.82rem;
+    }
+
+    .badge-none {
+      color: #9ca3af;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .footer-bar {
+      padding: 0.85rem 1.25rem;
+      border-top: 1.5px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: #f8fafc;
+    }
+
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.73rem;
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .save-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 20px;
+      background: #2563eb;
+      color: #fff;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+    }
+
+    .save-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .saved-top {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1.5px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      flex-wrap: wrap;
+    }
+
+    .saved-top .label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #374151;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      flex: 1;
+    }
+
+    .saved-top .wtag {
+      font-size: 0.73rem;
+      font-weight: 700;
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1.5px solid #bfdbfe;
+      padding: 3px 11px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .wage-table-wrap {
+      padding: 1.25rem;
+    }
+
+    .wage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .wage-label-cell {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #111827;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 9px;
+    }
+
+    .wage-input-cell {
+      display: flex;
+      align-items: center;
+    }
+
+    .wage-input {
+      width: 100%;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 9px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #111827;
+      transition: border-color 0.15s;
+    }
+
+    .wage-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .wage-unit {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    .wage-save-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 22px;
+      background: #059669;
+      color: #fff;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(5,150,105,0.25);
+    }
+
+    .wage-save-btn:hover {
+      background: #047857;
+      transform: translateY(-1px);
+    }
+
+    .employee-add-box {
+      padding: 1.25rem;
+      border-bottom: 1.5px solid #e2e8f0;
+      background: #ffffff;
+    }
+
+    .employee-add-grid {
+      display: grid;
+      grid-template-columns: 1fr 160px 160px auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .employee-input,
+    .employee-select,
+    .color-select {
+      width: 100%;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 9px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .employee-input:focus,
+    .employee-select:focus,
+    .color-select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .employee-add-btn {
+      padding: 10px 18px;
+      background: #7c3aed;
+      color: #fff;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.25);
+      white-space: nowrap;
+    }
+
+    .employee-add-btn:hover {
+      background: #6d28d9;
+    }
+
+    .employee-manage-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .employee-house-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+    }
+
+    .employee-delete-btn {
+      padding: 7px 10px;
+      background: #fff;
+      color: #dc2626;
+      border: 1.5px solid #fecaca;
+      border-radius: 8px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .employee-delete-btn:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
+    .wage-summary-wrap {
+      padding: 1.25rem;
+    }
+
+    .wage-summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+    }
+
+    .wage-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .wage-card-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    .wage-card-detail {
+      font-size: 0.72rem;
+      color: #6b7280;
+    }
+
+    .wage-card-amount {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #059669;
+      margin-top: 4px;
+    }
+
+    .wage-total-box {
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .wage-total-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #1d4ed8;
+    }
+
+    .wage-total-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1d4ed8;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #059669;
+      color: #fff;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 9px 20px;
+      border-radius: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 9999;
+      box-shadow: 0 6px 20px rgba(5,150,105,0.35);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 500px) {
+      .wage-grid,
+      .wage-summary-grid,
+      .employee-add-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .save-btn,
+      .wage-save-btn,
+      .employee-add-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .topnav {
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="topnav">
+    <span class="nav-logo">📅 กะพนักงาน</span>
+    <button class="nav-btn active" id="btn-cat" onclick="showPage('cat')">🐱 บ้านแคท</button>
+    <button class="nav-btn" id="btn-sala" onclick="showPage('sala')">🥟 บ้านเปา</button>
+    <button class="nav-btn" id="btn-wage" onclick="showPage('wage')">📊 สรุปกะ</button>
+  </nav>
+
+  <div class="page active" id="page-cat">
+    <div class="page-header">
+      <div class="page-icon">🐱</div>
+      <div>
+        <h1>บ้านแคท</h1>
+        <p>ตารางกะประจำสัปดาห์</p>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">กรอกตารางกะ</span>
+          <div class="week-nav">
+            <button class="wk-btn" onclick="changeWeek('cat', -1)">&#8592;</button>
+            <div class="week-label" id="week-label-cat"></div>
+            <button class="wk-btn" onclick="changeWeek('cat', 1)">&#8594;</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr></tr>
+            </thead>
+            <tbody id="body-cat"></tbody>
+          </table>
+        </div>
+
+        <div class="footer-bar">
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>กะเช้า</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>3 นอย</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>ลาว</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>กะบ่าย</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>ช่วยลาว</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#111827"></div>ช่วยไทย</div>
+          </div>
+          <button class="save-btn" onclick="saveSchedule('cat')">💾 บันทึกตาราง</button>
+        </div>
+      </div>
+
+      <div id="saved-wrap-cat" style="display:none">
+        <div class="card">
+          <div class="saved-top">
+            <span class="label">บ้านแคท</span>
+            <span class="wtag" id="saved-tag-cat"></span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr id="saved-thead-cat"><th>วัน</th></tr>
+              </thead>
+              <tbody id="saved-body-cat"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="wage-result-cat" style="display:none">
+          <div class="card-header">
+            <span class="card-title">📊 สรุปกะที่เข้าประจำสัปดาห์</span>
+          </div>
+          <div class="wage-summary-wrap">
+            <div class="wage-summary-grid" id="wage-cards-cat"></div>
+            <div class="wage-total-box">
+              <span class="wage-total-label">🐱 บ้านแคท — รวมกะทั้งหมด</span>
+              <span class="wage-total-amount" id="wage-total-cat">0 กะ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="wage-result-sala-on-cat" style="display:none">
+          <div class="card-header">
+            <span class="card-title">📊 สรุปจำนวนกะ บ้านเปา</span>
+          </div>
+          <div class="wage-summary-wrap">
+            <div class="wage-summary-grid" id="wage-cards-sala-on-cat"></div>
+            <div class="wage-total-box">
+              <span class="wage-total-label">🥟 บ้านเปา — รวมกะทั้งหมด</span>
+              <span class="wage-total-amount" id="wage-total-sala-on-cat">0 กะ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="wage-result-all-on-cat" style="display:none">
+          <div class="card-header">
+            <span class="card-title">📊 รวมจำนวนกะทั้งหมด</span>
+          </div>
+          <div class="wage-summary-wrap">
+            <div class="wage-total-box">
+              <span class="wage-total-label">📊 รวมจำนวนกะทั้งหมด</span>
+              <span class="wage-total-amount" id="wage-total-all-on-cat">0 กะ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-sala">
+    <div class="page-header">
+      <div class="page-icon">🥟</div>
+      <div>
+        <h1>บ้านเปา</h1>
+        <p>ตารางกะประจำสัปดาห์</p>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">กรอกตารางกะ</span>
+          <div class="week-nav">
+            <button class="wk-btn" onclick="changeWeek('sala', -1)">&#8592;</button>
+            <div class="week-label" id="week-label-sala"></div>
+            <button class="wk-btn" onclick="changeWeek('sala', 1)">&#8594;</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr></tr>
+            </thead>
+            <tbody id="body-sala"></tbody>
+          </table>
+        </div>
+
+        <div class="footer-bar">
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>กะเช้า</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>3 นอย</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>ลาว</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>กะบ่าย</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>ช่วยลาว</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#111827"></div>ช่วยไทย</div>
+          </div>
+          <button class="save-btn" onclick="saveSchedule('sala')">💾 บันทึกตาราง</button>
+        </div>
+      </div>
+
+      <div id="saved-wrap-sala" style="display:none">
+        <div class="card">
+          <div class="saved-top">
+            <span class="label">บ้านเปา</span>
+            <span class="wtag" id="saved-tag-sala"></span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr id="saved-thead-sala"><th>วัน</th></tr>
+              </thead>
+              <tbody id="saved-body-sala"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="wage-result-sala" style="display:none">
+          <div class="card-header">
+            <span class="card-title">📊 สรุปกะที่เข้าประจำสัปดาห์</span>
+          </div>
+          <div class="wage-summary-wrap">
+            <div class="wage-summary-grid" id="wage-cards-sala"></div>
+            <div class="wage-total-box">
+              <span class="wage-total-label">🥟 บ้านเปา — รวมกะทั้งหมด</span>
+              <span class="wage-total-amount" id="wage-total-sala">0 กะ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-wage">
+    <div class="page-header">
+      <div class="page-icon">📊</div>
+      <div>
+        <h1>ตั้งค่าพนักงาน</h1>
+        <p>เพิ่มชื่อพนักงาน เลือกสีชื่อคน และดูจำนวนกะที่เข้า</p>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">เพิ่มชื่อพนักงาน</span>
+        </div>
+
+        <div class="employee-add-box">
+          <div class="employee-add-grid">
+            <input
+              type="text"
+              id="new-employee-name"
+              class="employee-input"
+              placeholder="กรอกชื่อพนักงาน เช่น น้องใหม่"
+            />
+
+            <select id="new-employee-house" class="employee-select">
+              <option value="cat">บ้านแคท</option>
+              <option value="sala">บ้านเปา</option>
+            </select>
+
+            <select id="new-employee-color" class="color-select"></select>
+
+            <button class="employee-add-btn" onclick="addEmployee()">
+              ➕ เพิ่มพนักงาน
+            </button>
+          </div>
+        </div>
+
+        <div class="card-header">
+          <span class="card-title">รายชื่อพนักงาน / สี / ลบพนักงาน</span>
+        </div>
+
+        <div class="wage-table-wrap">
+          <div class="wage-grid" id="wage-grid"></div>
+        </div>
+
+        <div class="footer-bar" style="justify-content:flex-end">
+          <button class="wage-save-btn" onclick="saveWages()">✅ บันทึกข้อมูลพนักงาน</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbwy4S63g-5dVWtE7MUeqFfOlH34fBqKwjev7qt8Ph5UsVGcLtGs1O7o26iU4t_8z2tZ/exec";
+
+    const DAY_NAMES = ['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','อาทิตย์'];
+
+    let PEOPLE = {
+      cat: ['เอิญ','บี','เติ้ล','แคท','เปา'],
+      sala: ['เปา','แคท','มาย','เติ้ล','อาโป']
+    };
+
+    const COLOR_OPTIONS = [
+      { key: 'red', label: 'แดง' },
+      { key: 'yellow', label: 'เหลือง' },
+      { key: 'blue', label: 'น้ำเงิน' },
+      { key: 'black', label: 'ดำ' },
+      { key: 'green', label: 'เขียว' },
+      { key: 'purple', label: 'ม่วง' },
+      { key: 'pink', label: 'ชมพู' },
+      { key: 'sky', label: 'ฟ้า' }
+    ];
+
+    let PERSON_COLORS = {
+      'เอิญ': 'purple',
+      'บี': 'yellow',
+      'เติ้ล': 'blue',
+      'แคท': 'red',
+      'เปา': 'black',
+      'มาย': 'pink',
+      'อาโป': 'green'
+    };
+
+    const SHIFT_TYPES = [
+      { key: 'shift-0800-1630', label: '08.00-16.30', cls: 'has-morning', badge: 'badge-morning' },
+      { key: 'shift-1630-close', label: '16.30-ปิดบ้าน', cls: 'has-afternoon', badge: 'badge-afternoon' },
+      { key: 'three-noi', label: '3นอย', cls: 'has-threenoi', badge: 'badge-threenoi' },
+      { key: 'lao', label: 'ลาว', cls: 'has-lao', badge: 'badge-lao' },
+      { key: 'thai', label: 'ไทย', cls: 'has-helpthai', badge: 'badge-helpthai' },
+      { key: 'shift-0800-lao-summary', label: '08.00-สรุปลาว', cls: 'has-helplao', badge: 'badge-helplao' }
+    ];
+
+    const state = {
+      cat: {
+        monday: getThisMonday(new Date()),
+        saved: null
+      },
+      sala: {
+        monday: getThisMonday(new Date()),
+        saved: null
+      }
+    };
+
+    let wages = {
+      'แคท': 0,
+      'บี': 450,
+      'เติ้ล': 400,
+      'เปา': 0,
+      'อาโป': 200
+    };
+
+    function shiftTypesForHouse(id) {
+      return SHIFT_TYPES.filter(type => !type.houses || type.houses.includes(id));
+    }
+
+    function getThisMonday(date) {
+      const d = new Date(date);
+      const day = d.getDay();
+      d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day));
+      d.setHours(0,0,0,0);
+      return d;
+    }
+
+    function addDays(date, n) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + n);
+      return d;
+    }
+
+    function fmt(date) {
+      return String(date.getDate()).padStart(2,'0') + '/' +
+             String(date.getMonth() + 1).padStart(2,'0') + '/' +
+             (date.getFullYear() + 543);
+    }
+
+    function weekLabel(monday) {
+      return `${fmt(monday)} — ${fmt(addDays(monday, 6))}`;
+    }
+
+    function weekKey(monday) {
+      const y = monday.getFullYear();
+      const m = String(monday.getMonth() + 1).padStart(2,'0');
+      const d = String(monday.getDate()).padStart(2,'0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function scheduleKey(id) {
+      return `v3_${id}_${weekKey(state[id].monday)}`;
+    }
+
+    function numFmt(n) {
+      return '฿' + Number(n || 0).toLocaleString('th-TH');
+    }
+
+    function getAllPeople() {
+      return [...new Set([...PEOPLE.cat, ...PEOPLE.sala])];
+    }
+
+    function colorLabel(colorKey) {
+      return COLOR_OPTIONS.find(c => c.key === colorKey)?.label || 'ฟ้า';
+    }
+
+    function colorSelectOptions(selectedKey = 'sky') {
+      return COLOR_OPTIONS.map(color => `
+        <option value="${color.key}" ${color.key === selectedKey ? 'selected' : ''}>
+          สี${color.label}
+        </option>
+      `).join('');
+    }
+
+    function personClass(name) {
+      const colorKey = PERSON_COLORS[name] || 'sky';
+      return `person-color-${colorKey}`;
+    }
+
+    function saveColorsLocal() {
+      localStorage.setItem('shift_person_colors_v3', JSON.stringify(PERSON_COLORS));
+    }
+
+    function loadColorsLocal() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('shift_person_colors_v3') || 'null');
+        if (saved && typeof saved === 'object') {
+          PERSON_COLORS = {
+            ...PERSON_COLORS,
+            ...saved
+          };
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderNewEmployeeColorSelect() {
+      const sel = document.getElementById('new-employee-color');
+      if (sel) {
+        sel.innerHTML = colorSelectOptions('sky');
+      }
+    }
+
+    function isThaiBonusDate(date) {
+      return [1, 16].includes(date.getDate());
+    }
+
+    function isTypeAvailable(type, date) {
+      return true;
+    }
+
+    function savePeopleLocal() {
+      localStorage.setItem('shift_people_v3', JSON.stringify(PEOPLE));
+      saveColorsLocal();
+    }
+
+    function loadPeopleLocal() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('shift_people_v3') || 'null');
+
+        if (saved && saved.cat && saved.sala) {
+          PEOPLE = {
+            cat: Array.isArray(saved.cat) ? saved.cat : PEOPLE.cat,
+            sala: Array.isArray(saved.sala) ? saved.sala : PEOPLE.sala
+          };
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderHeaders(id) {
+      const page = document.getElementById(`page-${id}`);
+      const headRow = page.querySelector('.card .table-wrap table thead tr');
+
+      headRow.innerHTML = '<th>วัน</th>';
+
+      PEOPLE[id].forEach(name => {
+        const th = document.createElement('th');
+        th.innerHTML = `<span class="badge ${personClass(name)}"><span class="badge-dot"></span>${name}</span>`;
+        headRow.appendChild(th);
+      });
+    }
+
+    function buildTable(id) {
+      document.getElementById(`week-label-${id}`).textContent = weekLabel(state[id].monday);
+      renderHeaders(id);
+
+      const tbody = document.getElementById(`body-${id}`);
+      tbody.innerHTML = '';
+
+      DAY_NAMES.forEach((day, di) => {
+        const date = addDays(state[id].monday, di);
+        const tr = document.createElement('tr');
+
+        const tdDay = document.createElement('td');
+        tdDay.className = 'day-cell';
+        tdDay.innerHTML = `<div class="day-name">${day}</div><div class="day-date">${fmt(date)}</div>`;
+        tr.appendChild(tdDay);
+
+        PEOPLE[id].forEach(name => {
+          const td = document.createElement('td');
+          const sel = document.createElement('select');
+          sel.className = 'shift-sel';
+          sel.dataset.day = di;
+          sel.dataset.person = name;
+
+          const empty = document.createElement('option');
+          empty.value = '';
+          empty.textContent = '— เลือกกะ —';
+          sel.appendChild(empty);
+
+          SHIFT_TYPES.forEach(type => {
+            const opt = document.createElement('option');
+            opt.value = type.key;
+            opt.textContent = type.label;
+            sel.appendChild(opt);
+          });
+
+          sel.addEventListener('change', function() {
+            const type = SHIFT_TYPES.find(t => t.key === this.value);
+            this.className = 'shift-sel' + (type ? ` ${type.cls}` : '');
+          });
+
+          td.appendChild(sel);
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateAutoThreeNoi(id, dayIndex, name) {
+      const autoBox = document.querySelector(`#body-${id} .auto-three-noi[data-day="${dayIndex}"]`);
+      if (!autoBox) return;
+
+      if (!name) {
+        autoBox.innerHTML = '<span class="badge-none">เลือกกะเช้าก่อน</span>';
+        return;
+      }
+
+      autoBox.innerHTML = badgeHtml('three-noi', name, addDays(state[id].monday, Number(dayIndex)));
+    }
+
+    function updateAllAutoThreeNoi(id) {
+      document.querySelectorAll(`#body-${id} select[data-type="morning"]`).forEach(sel => {
+        updateAutoThreeNoi(id, sel.dataset.day, sel.value);
+      });
+    }
+
+    function changeWeek(id, dir) {
+      state[id].monday = addDays(state[id].monday, dir * 7);
+      buildTable(id);
+      loadSchedule(id);
+    }
+
+    async function saveSchedule(id) {
+      const data = Array.from({ length: 7 }, () => {
+        const row = {};
+        PEOPLE[id].forEach(name => row[name] = '');
+        return row;
+      });
+
+      document.querySelectorAll(`#body-${id} select`).forEach(sel => {
+        data[sel.dataset.day][sel.dataset.person] = sel.value;
+      });
+
+      state[id].saved = {
+        monday: new Date(state[id].monday),
+        label: weekLabel(state[id].monday),
+        data
+      };
+
+      renderSaved(id);
+      showToast('💾 กำลังบันทึก...');
+
+      await apiPost({
+        action: 'saveSchedule',
+        key: scheduleKey(id),
+        house: id,
+        week: weekKey(state[id].monday),
+        data
+      });
+
+      showToast('✅ บันทึกลง Google Sheet แล้ว');
+    }
+
+    function badgeHtml(typeKey, name, date) {
+      if (!typeKey) return '<span class="badge-none">—</span>';
+      const type = SHIFT_TYPES.find(t => t.key === typeKey);
+      if (!type) return '<span class="badge-none">—</span>';
+      return `<span class="badge ${personClass(name)} ${type.badge}"><span class="badge-dot"></span>${type.label}</span>`;
+    }
+
+    function renderSaved(id) {
+      const rec = state[id].saved;
+      if (!rec) return;
+
+      document.getElementById(`saved-wrap-${id}`).style.display = 'block';
+      document.getElementById(`saved-tag-${id}`).textContent = rec.label;
+
+      const thead = document.getElementById(`saved-thead-${id}`);
+      thead.innerHTML = '<th>วัน</th>';
+      PEOPLE[id].forEach(name => {
+        const th = document.createElement('th');
+        th.innerHTML = `<span class="badge ${personClass(name)}"><span class="badge-dot"></span>${name}</span>`;
+        thead.appendChild(th);
+      });
+
+      const tbody = document.getElementById(`saved-body-${id}`);
+      tbody.innerHTML = '';
+
+      DAY_NAMES.forEach((day, di) => {
+        const date = addDays(rec.monday, di);
+        const tr = document.createElement('tr');
+        const tdDay = document.createElement('td');
+        tdDay.className = 'day-cell';
+        tdDay.innerHTML = `<div class="day-name">${day}</div><div class="day-date">${fmt(date)}</div>`;
+        tr.appendChild(tdDay);
+
+        PEOPLE[id].forEach(name => {
+          const td = document.createElement('td');
+          const shiftKey = rec.data?.[di]?.[name] || '';
+          td.innerHTML = badgeHtml(shiftKey, name, date);
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+
+      renderWageSummary(id);
+    }
+
+    function calculateWageList(id) {
+      const rec = state[id].saved;
+      if (!rec) return { list: [], total: 0 };
+
+      const totals = {};
+      PEOPLE[id].forEach(name => {
+        totals[name] = { name, counts: {}, total: 0 };
+        SHIFT_TYPES.forEach(type => totals[name].counts[type.key] = 0);
+      });
+
+      rec.data.forEach(row => {
+        PEOPLE[id].forEach(name => {
+          const shiftKey = row?.[name] || '';
+          if (!shiftKey) return;
+          if (!totals[name]) totals[name] = { name, counts: {}, total: 0 };
+          totals[name].counts[shiftKey] = (totals[name].counts[shiftKey] || 0) + 1;
+          totals[name].total += 1;
+        });
+      });
+
+      const list = Object.values(totals).filter(p => p.total > 0);
+      const total = list.reduce((sum, p) => sum + p.total, 0);
+      return { list, total };
+    }
+
+    function renderWageCards(cardsEl, list, id) {
+      cardsEl.innerHTML = '';
+      const types = SHIFT_TYPES;
+
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'wage-card';
+
+        const details = types
+          .filter(type => (p.counts[type.key] || 0) > 0)
+          .map(type => `<div class="wage-card-detail">${type.label}: ${p.counts[type.key]} กะ</div>`)
+          .join('');
+
+        card.innerHTML = `
+          <div class="wage-card-name">👤 ${p.name}</div>
+          ${details}
+          <div class="wage-card-amount">รวม ${p.total} กะ</div>
+        `;
+
+        cardsEl.appendChild(card);
+      });
+    }
+
+    function renderWageSummary(id) {
+      const { list, total } = calculateWageList(id);
+
+      const resultEl = document.getElementById(`wage-result-${id}`);
+      const cardsEl = document.getElementById(`wage-cards-${id}`);
+      const totalEl = document.getElementById(`wage-total-${id}`);
+
+      if (list.length === 0) {
+        resultEl.style.display = 'none';
+      } else {
+        resultEl.style.display = 'block';
+        renderWageCards(cardsEl, list, id);
+        totalEl.textContent = `${total} กะ`;
+      }
+
+      renderCatPageAllWages();
+    }
+
+    function renderCatPageAllWages() {
+      const cat = calculateWageList('cat');
+      const sala = calculateWageList('sala');
+
+      const salaBox = document.getElementById('wage-result-sala-on-cat');
+      const salaCards = document.getElementById('wage-cards-sala-on-cat');
+      const salaTotal = document.getElementById('wage-total-sala-on-cat');
+      const allBox = document.getElementById('wage-result-all-on-cat');
+      const allTotal = document.getElementById('wage-total-all-on-cat');
+
+      if (sala.list.length > 0) {
+        salaBox.style.display = 'block';
+        renderWageCards(salaCards, sala.list, 'sala');
+        salaTotal.textContent = `${sala.total} กะ`;
+      } else {
+        salaBox.style.display = 'none';
+      }
+
+      const grandTotal = cat.total + sala.total;
+      if (grandTotal > 0) {
+        allBox.style.display = 'block';
+        allTotal.textContent = `${grandTotal} กะ`;
+      } else {
+        allBox.style.display = 'none';
+      }
+    }
+
+    function buildWageGrid() {
+      const grid = document.getElementById('wage-grid');
+      grid.innerHTML = '';
+
+      const allPeople = getAllPeople();
+
+      allPeople.forEach(name => {
+        if (!PERSON_COLORS[name]) PERSON_COLORS[name] = 'sky';
+
+        const label = document.createElement('div');
+        label.className = 'wage-label-cell';
+        label.innerHTML = `
+          <span class="badge ${personClass(name)}">
+            <span class="badge-dot"></span>
+            ${name}
+          </span>
+        `;
+
+        const inputWrap = document.createElement('div');
+        inputWrap.className = 'wage-input-cell employee-manage-cell';
+
+        const colorSel = document.createElement('select');
+        colorSel.className = 'color-select';
+        colorSel.id = `color-inp-${name}`;
+        colorSel.innerHTML = colorSelectOptions(PERSON_COLORS[name] || 'sky');
+        colorSel.addEventListener('change', function() {
+          PERSON_COLORS[name] = this.value;
+          saveColorsLocal();
+          buildTable('cat');
+          buildTable('sala');
+          if (state.cat.saved) renderSaved('cat');
+          if (state.sala.saved) renderSaved('sala');
+          buildWageGrid();
+        });
+        colorSel.style.flex = '1 1 150px';
+
+        inputWrap.appendChild(colorSel);
+
+        ['cat','sala'].forEach(house => {
+          if (!PEOPLE[house].includes(name)) return;
+
+          const tag = document.createElement('span');
+          tag.className = 'employee-house-tag';
+          tag.textContent = house === 'cat' ? '🐱 บ้านแคท' : '🥟 บ้านเปา';
+          inputWrap.appendChild(tag);
+
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'employee-delete-btn';
+          delBtn.textContent = '🗑️ ลบ';
+          delBtn.title = `ลบ ${name} ออกจาก${house === 'cat' ? 'บ้านแคท' : 'บ้านเปา'}`;
+          delBtn.onclick = () => deleteEmployee(name, house);
+          inputWrap.appendChild(delBtn);
+        });
+
+        grid.appendChild(label);
+        grid.appendChild(inputWrap);
+      });
+    }
+
+    async function addEmployee() {
+      const nameInput = document.getElementById('new-employee-name');
+      const houseInput = document.getElementById('new-employee-house');
+      const colorInput = document.getElementById('new-employee-color');
+
+      const name = nameInput.value.trim();
+      const house = houseInput.value;
+      const color = colorInput?.value || 'sky';
+
+      if (!name) {
+        showToast('⚠️ กรุณากรอกชื่อพนักงาน');
+        return;
+      }
+
+      if (!PEOPLE[house]) {
+        showToast('❌ ไม่พบบ้านที่เลือก');
+        return;
+      }
+
+      if (PEOPLE[house].includes(name)) {
+        showToast('⚠️ มีชื่อนี้ในบ้านนี้อยู่แล้ว');
+        return;
+      }
+
+      PEOPLE[house].push(name);
+
+      if (wages[name] === undefined) {
+        wages[name] = 0;
+      }
+
+      PERSON_COLORS[name] = color;
+
+      savePeopleLocal();
+
+      buildTable('cat');
+      buildTable('sala');
+
+      await loadSchedule('cat');
+      await loadSchedule('sala');
+
+      buildWageGrid();
+
+      await apiPost({
+        action: 'saveWages',
+        data: {
+          ...wages,
+          __people: PEOPLE,
+          __colors: PERSON_COLORS
+        }
+      });
+
+      nameInput.value = '';
+      showToast('✅ เพิ่มพนักงานแล้ว');
+    }
+
+    async function deleteEmployee(name, house) {
+      const houseLabel = house === 'cat' ? 'บ้านแคท' : 'บ้านเปา';
+
+      if (!PEOPLE[house] || !PEOPLE[house].includes(name)) {
+        showToast('⚠️ ไม่พบพนักงานในบ้านนี้');
+        return;
+      }
+
+      const ok = confirm(`ยืนยันลบ “${name}” ออกจาก${houseLabel} ?\n\nกะของ ${name} ในสัปดาห์ที่กำลังเปิดของบ้านนี้จะถูกล้างออกด้วย`);
+      if (!ok) return;
+
+      PEOPLE[house] = PEOPLE[house].filter(p => p !== name);
+
+      // ล้างชื่อคนนี้ออกจากตารางสัปดาห์ที่กำลังเปิดของบ้านที่ลบ
+      if (state[house]?.saved?.data) {
+        state[house].saved.data.forEach(row => {
+          if (row && Object.prototype.hasOwnProperty.call(row, name)) delete row[name];
+        });
+      }
+
+      // ถ้าชื่อนี้ไม่เหลืออยู่ในบ้านไหนแล้ว ให้ลบสี/ข้อมูลเก่าของชื่อด้วย
+      const stillExists = PEOPLE.cat.includes(name) || PEOPLE.sala.includes(name);
+      if (!stillExists) {
+        delete PERSON_COLORS[name];
+        if (typeof wages === 'object' && wages) delete wages[name];
+      }
+
+      savePeopleLocal();
+
+      buildTable('cat');
+      buildTable('sala');
+
+      if (state[house]?.saved) {
+        setScheduleInputs(house, state[house].saved.data);
+        renderSaved(house);
+
+        await apiPost({
+          action: 'saveSchedule',
+          key: scheduleKey(house),
+          house,
+          week: weekKey(state[house].monday),
+          data: state[house].saved.data
+        });
+      }
+
+      if (state.cat.saved) renderSaved('cat');
+      if (state.sala.saved) renderSaved('sala');
+      buildWageGrid();
+
+      await apiPost({
+        action: 'saveWages',
+        data: {
+          ...wages,
+          __people: PEOPLE,
+          __colors: PERSON_COLORS
+        }
+      });
+
+      showToast(`🗑️ ลบ ${name} ออกจาก${houseLabel} แล้ว`);
+    }
+
+    async function saveWages() {
+      const allPeople = getAllPeople();
+
+      allPeople.forEach(name => {
+        const colorInp = document.getElementById(`color-inp-${name}`);
+        if (colorInp) {
+          PERSON_COLORS[name] = colorInp.value || 'sky';
+        }
+      });
+
+      ['cat','sala'].forEach(id => {
+        if (state[id].saved) {
+          renderWageSummary(id);
+        }
+      });
+
+      savePeopleLocal();
+
+      showToast('💾 กำลังบันทึกข้อมูลพนักงาน...');
+
+      await apiPost({
+        action: 'saveWages',
+        data: {
+          ...wages,
+          __people: PEOPLE,
+          __colors: PERSON_COLORS
+        }
+      });
+
+      showToast('✅ บันทึกข้อมูลพนักงานแล้ว');
+    }
+
+    async function apiPost(payload) {
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        return true;
+      } catch (err) {
+        console.error(err);
+        showToast('❌ บันทึกไม่สำเร็จ');
+        return false;
+      }
+    }
+
+    async function apiGet(params) {
+      const url = API_URL + '?' + new URLSearchParams(params).toString();
+      const res = await fetch(url);
+      return await res.json();
+    }
+
+    function setScheduleInputs(id, data) {
+      document.querySelectorAll(`#body-${id} select`).forEach(sel => {
+        const val = data?.[sel.dataset.day]?.[sel.dataset.person] || '';
+        sel.value = val;
+        const type = SHIFT_TYPES.find(t => t.key === val);
+        sel.className = 'shift-sel' + (type ? ` ${type.cls}` : '');
+      });
+    }
+
+    async function loadSchedule(id) {
+      try {
+        const json = await apiGet({
+          action: 'loadSchedule',
+          key: scheduleKey(id)
+        });
+
+        if (json?.ok && json?.data?.data) {
+          state[id].saved = {
+            monday: new Date(state[id].monday),
+            label: weekLabel(state[id].monday),
+            data: json.data.data
+          };
+
+          setScheduleInputs(id, json.data.data);
+          renderSaved(id);
+        } else {
+          state[id].saved = null;
+
+          const wrap = document.getElementById(`saved-wrap-${id}`);
+          if (wrap) wrap.style.display = 'none';
+
+          renderCatPageAllWages();
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('⚠️ โหลดข้อมูลไม่สำเร็จ');
+      }
+    }
+
+    async function loadWages() {
+      try {
+        const json = await apiGet({
+          action: 'loadWages'
+        });
+
+        if (json?.ok && json?.data) {
+          if (json.data.__colors) {
+            PERSON_COLORS = {
+              ...PERSON_COLORS,
+              ...json.data.__colors
+            };
+            saveColorsLocal();
+          }
+
+          if (json.data.__people) {
+            PEOPLE = {
+              cat: Array.isArray(json.data.__people.cat) ? json.data.__people.cat : PEOPLE.cat,
+              sala: Array.isArray(json.data.__people.sala) ? json.data.__people.sala : PEOPLE.sala
+            };
+
+            savePeopleLocal();
+          }
+
+          const cleanWages = {
+            ...json.data
+          };
+
+          delete cleanWages.__people;
+          delete cleanWages.__colors;
+
+          wages = {
+            ...wages,
+            ...cleanWages
+          };
+
+          buildTable('cat');
+          buildTable('sala');
+          buildWageGrid();
+
+          ['cat','sala'].forEach(id => {
+            if (state[id].saved) {
+              renderWageSummary(id);
+            }
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      document.getElementById(`page-${id}`).classList.add('active');
+      document.getElementById(`btn-${id}`).classList.add('active');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+
+      t.textContent = msg;
+      t.classList.add('show');
+
+      setTimeout(() => {
+        t.classList.remove('show');
+      }, 2200);
+    }
+
+    loadPeopleLocal();
+    loadColorsLocal();
+    renderNewEmployeeColorSelect();
+
+    buildTable('cat');
+    buildTable('sala');
+    buildWageGrid();
+
+    loadWages().then(() => {
+      loadSchedule('cat');
+      loadSchedule('sala');
+    });
+  </script>
+</body>
+</html>

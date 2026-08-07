@@ -306,6 +306,13 @@
       font-weight: 700;
     }
 
+    select.shift-sel.has-lao {
+      border-color: #10b981;
+      background-color: #ecfdf5;
+      color: #047857;
+      font-weight: 700;
+    }
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -371,6 +378,17 @@
 
     .badge-threenoi .badge-dot {
       background: #8b5cf6;
+    }
+
+
+    .badge-lao {
+      background: #d1fae5;
+      color: #047857;
+      border: 1px solid #6ee7b7;
+    }
+
+    .badge-lao .badge-dot {
+      background: #10b981;
     }
 
     .person-cat {
@@ -823,6 +841,46 @@
       background: #6d28d9;
     }
 
+    .employee-manage-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .employee-house-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+    }
+
+    .employee-delete-btn {
+      padding: 7px 10px;
+      background: #fff;
+      color: #dc2626;
+      border: 1.5px solid #fecaca;
+      border-radius: 8px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .employee-delete-btn:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
     .wage-summary-wrap {
       padding: 1.25rem;
     }
@@ -946,7 +1004,7 @@
     <span class="nav-logo">📅 กะพนักงาน</span>
     <button class="nav-btn active" id="btn-cat" onclick="showPage('cat')">🐱 บ้านแคท</button>
     <button class="nav-btn" id="btn-sala" onclick="showPage('sala')">🥟 บ้านซาลาเปา</button>
-    <button class="nav-btn" id="btn-wage" onclick="showPage('wage')">💰 ค่าแรง</button>
+    <button class="nav-btn" id="btn-wage" onclick="showPage('wage')">📊 สรุปกะ</button>
   </nav>
 
   <div class="page active" id="page-cat">
@@ -981,10 +1039,11 @@
         <div class="footer-bar">
           <div class="legend">
             <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>กะเช้า</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>3 นอย</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>ลาว</div>
             <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>กะบ่าย</div>
             <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>ช่วยลาว</div>
             <div class="legend-item"><div class="legend-dot" style="background:#111827"></div>ช่วยไทย</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#111827"></div>วันที่ 1/16 กะเช้าแสดง +ไทย</div>
           </div>
           <button class="save-btn" onclick="saveSchedule('cat')">💾 บันทึกตาราง</button>
         </div>
@@ -1009,38 +1068,38 @@
 
         <div class="card" id="wage-result-cat" style="display:none">
           <div class="card-header">
-            <span class="card-title">💰 สรุปค่าแรงประจำสัปดาห์</span>
+            <span class="card-title">📊 สรุปจำนวนกะประจำสัปดาห์</span>
           </div>
           <div class="wage-summary-wrap">
             <div class="wage-summary-grid" id="wage-cards-cat"></div>
             <div class="wage-total-box">
-              <span class="wage-total-label">🐱 บ้านแคท</span>
-              <span class="wage-total-amount" id="wage-total-cat">฿0</span>
+              <span class="wage-total-label">🐱 บ้านแคท — รวมทุกหัวข้อ</span>
+              <span class="wage-total-amount" id="wage-total-cat">0 กะ</span>
             </div>
           </div>
         </div>
 
         <div class="card" id="wage-result-sala-on-cat" style="display:none">
           <div class="card-header">
-            <span class="card-title">💰 สรุปค่าแรง บ้านซาลาเปา</span>
+            <span class="card-title">📊 สรุปจำนวนกะ บ้านซาลาเปา</span>
           </div>
           <div class="wage-summary-wrap">
             <div class="wage-summary-grid" id="wage-cards-sala-on-cat"></div>
             <div class="wage-total-box">
-              <span class="wage-total-label">🥟 บ้านซาลาเปา</span>
-              <span class="wage-total-amount" id="wage-total-sala-on-cat">฿0</span>
+              <span class="wage-total-label">🥟 บ้านซาลาเปา — รวมทุกหัวข้อ</span>
+              <span class="wage-total-amount" id="wage-total-sala-on-cat">0 กะ</span>
             </div>
           </div>
         </div>
 
         <div class="card" id="wage-result-all-on-cat" style="display:none">
           <div class="card-header">
-            <span class="card-title">💵 รวมค่าแรงทั้งหมด</span>
+            <span class="card-title">📊 รวมจำนวนกะทั้งหมด</span>
           </div>
           <div class="wage-summary-wrap">
             <div class="wage-total-box">
-              <span class="wage-total-label">💵 รวมค่าแรงทั้งหมด</span>
-              <span class="wage-total-amount" id="wage-total-all-on-cat">฿0</span>
+              <span class="wage-total-label">📊 รวมจำนวนกะทั้งหมด</span>
+              <span class="wage-total-amount" id="wage-total-all-on-cat">0 กะ</span>
             </div>
           </div>
         </div>
@@ -1080,10 +1139,11 @@
         <div class="footer-bar">
           <div class="legend">
             <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>กะเช้า</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>3 นอย</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>ลาว</div>
             <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>กะบ่าย</div>
             <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>ช่วยลาว</div>
             <div class="legend-item"><div class="legend-dot" style="background:#111827"></div>ช่วยไทย</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>เสริมช่วง 3 นอย</div>
           </div>
           <button class="save-btn" onclick="saveSchedule('sala')">💾 บันทึกตาราง</button>
         </div>
@@ -1108,13 +1168,13 @@
 
         <div class="card" id="wage-result-sala" style="display:none">
           <div class="card-header">
-            <span class="card-title">💰 สรุปค่าแรงประจำสัปดาห์</span>
+            <span class="card-title">📊 สรุปจำนวนกะประจำสัปดาห์</span>
           </div>
           <div class="wage-summary-wrap">
             <div class="wage-summary-grid" id="wage-cards-sala"></div>
             <div class="wage-total-box">
-              <span class="wage-total-label">🥟 บ้านซาลาเปา</span>
-              <span class="wage-total-amount" id="wage-total-sala">฿0</span>
+              <span class="wage-total-label">🥟 บ้านซาลาเปา — รวมทุกหัวข้อ</span>
+              <span class="wage-total-amount" id="wage-total-sala">0 กะ</span>
             </div>
           </div>
         </div>
@@ -1124,10 +1184,10 @@
 
   <div class="page" id="page-wage">
     <div class="page-header">
-      <div class="page-icon">💰</div>
+      <div class="page-icon">📊</div>
       <div>
-        <h1>กรอกค่าแรง</h1>
-        <p>ค่าแรงต่อ 1 กะ เพิ่มชื่อพนักงานใหม่ และเลือกสีชื่อคน</p>
+        <h1>ตั้งค่าพนักงาน</h1>
+        <p>เพิ่มชื่อพนักงาน เลือกสีชื่อคน และดูจำนวนกะที่เข้า</p>
       </div>
     </div>
 
@@ -1160,7 +1220,7 @@
         </div>
 
         <div class="card-header">
-          <span class="card-title">ค่าแรงพนักงาน + สีชื่อคน</span>
+          <span class="card-title">รายชื่อพนักงาน / สี / ลบพนักงาน</span>
         </div>
 
         <div class="wage-table-wrap">
@@ -1168,7 +1228,7 @@
         </div>
 
         <div class="footer-bar" style="justify-content:flex-end">
-          <button class="wage-save-btn" onclick="saveWages()">✅ บันทึกค่าแรง</button>
+          <button class="wage-save-btn" onclick="saveWages()">✅ บันทึกข้อมูลพนักงาน</button>
         </div>
       </div>
     </div>
@@ -1210,43 +1270,37 @@
         key: 'morning',
         label: 'กะเช้า',
         cls: 'has-morning',
-        badge: 'badge-morning',
-        pay: 1,
-        bonus: 0
-      },
-      {
-        key: 'afternoon',
-        label: 'กะบ่าย',
-        cls: 'has-afternoon',
-        badge: 'badge-afternoon',
-        pay: 1,
-        bonus: 0
+        badge: 'badge-morning'
       },
       {
         key: 'three-noi',
         label: '3 นอย',
         cls: 'has-threenoi',
-        badge: 'badge-threenoi',
-        pay: 0,
-        bonus: 0,
-        autoFrom: 'morning',
-        houses: ['sala']
+        badge: 'badge-threenoi'
+      },
+      {
+        key: 'lao',
+        label: 'ลาว',
+        cls: 'has-lao',
+        badge: 'badge-lao'
+      },
+      {
+        key: 'afternoon',
+        label: 'กะบ่าย',
+        cls: 'has-afternoon',
+        badge: 'badge-afternoon'
       },
       {
         key: 'help-lao',
         label: 'ช่วยลาว',
         cls: 'has-helplao',
-        badge: 'badge-helplao',
-        pay: 0,
-        bonus: 50
+        badge: 'badge-helplao'
       },
       {
         key: 'help-thai',
         label: 'ช่วยไทย',
         cls: 'has-helpthai',
-        badge: 'badge-helpthai',
-        pay: 0,
-        bonus: 100
+        badge: 'badge-helpthai'
       }
     ];
 
@@ -1428,17 +1482,6 @@
             return;
           }
 
-          if (type.autoFrom) {
-            const autoBox = document.createElement('div');
-            autoBox.className = 'auto-three-noi';
-            autoBox.dataset.day = di;
-            autoBox.dataset.type = type.key;
-            autoBox.innerHTML = '<span class="badge-none">เลือกกะเช้าก่อน</span>';
-            td.appendChild(autoBox);
-            tr.appendChild(td);
-            return;
-          }
-
           const sel = document.createElement('select');
           sel.className = 'shift-sel';
           sel.dataset.day = di;
@@ -1458,10 +1501,6 @@
 
           sel.addEventListener('change', function() {
             this.className = 'shift-sel' + (this.value ? ` ${personClass(this.value)}` : '');
-
-            if (this.dataset.type === 'morning') {
-              updateAutoThreeNoi(id, this.dataset.day, this.value);
-            }
           });
 
           td.appendChild(sel);
@@ -1505,14 +1544,6 @@
 
       document.querySelectorAll(`#body-${id} select`).forEach(sel => {
         data[sel.dataset.day][sel.dataset.type] = sel.value;
-      });
-
-      data.forEach(row => {
-        shiftTypesForHouse(id).forEach(type => {
-          if (type.autoFrom) {
-            row[type.key] = row[type.autoFrom] || '';
-          }
-        });
       });
 
       state[id].saved = {
@@ -1593,7 +1624,7 @@
           if (!isTypeAvailable(type, date)) {
             td.innerHTML = '<span class="badge-none">—</span>';
           } else {
-            const savedName = rec.data?.[di]?.[type.key] || (type.autoFrom ? rec.data?.[di]?.[type.autoFrom] : '') || '';
+            const savedName = rec.data?.[di]?.[type.key] || '';
             td.innerHTML = badgeHtml(type.key, savedName, date);
           }
 
@@ -1610,74 +1641,54 @@
       const rec = state[id].saved;
 
       if (!rec) {
-        return {
-          list: [],
-          total: 0
-        };
+        return { list: [], total: 0 };
       }
 
+      const types = shiftTypesForHouse(id);
       const totals = {};
 
       PEOPLE[id].forEach(name => {
-        totals[name] = {
-          name,
-          shifts: 0,
-          bonus: 0,
-          amount: 0
-        };
+        totals[name] = { name, counts: {}, total: 0 };
+        types.forEach(type => totals[name].counts[type.key] = 0);
       });
 
-      rec.data.forEach((row, rowIndex) => {
-        shiftTypesForHouse(id).forEach(type => {
+      rec.data.forEach(row => {
+        types.forEach(type => {
           const name = row[type.key];
-
           if (!name) return;
 
           if (!totals[name]) {
-            totals[name] = {
-              name,
-              shifts: 0,
-              bonus: 0,
-              amount: 0
-            };
+            totals[name] = { name, counts: {}, total: 0 };
+            types.forEach(t => totals[name].counts[t.key] = 0);
           }
 
-          totals[name].shifts += type.pay;
-          totals[name].bonus += type.bonus;
-
-          const rowDate = addDays(rec.monday, rowIndex);
-
-          if (type.key === 'morning' && isThaiBonusDate(rowDate)) {
-            totals[name].bonus += 100;
-          }
+          totals[name].counts[type.key] = (totals[name].counts[type.key] || 0) + 1;
+          totals[name].total += 1;
         });
       });
 
-      Object.values(totals).forEach(p => {
-        p.amount = (p.shifts * (wages[p.name] || 0)) + p.bonus;
-      });
-
-      const list = Object.values(totals).filter(p => p.shifts > 0 || p.bonus > 0);
-      const total = list.reduce((sum, p) => sum + p.amount, 0);
-
-      return {
-        list,
-        total
-      };
+      const list = Object.values(totals).filter(p => p.total > 0);
+      const total = list.reduce((sum, p) => sum + p.total, 0);
+      return { list, total };
     }
 
-    function renderWageCards(cardsEl, list) {
+    function renderWageCards(cardsEl, list, id) {
       cardsEl.innerHTML = '';
+      const types = shiftTypesForHouse(id);
 
       list.forEach(p => {
         const card = document.createElement('div');
         card.className = 'wage-card';
 
+        const details = types
+          .filter(type => (p.counts[type.key] || 0) > 0)
+          .map(type => `<div class="wage-card-detail">${type.label}: ${p.counts[type.key]} กะ</div>`)
+          .join('');
+
         card.innerHTML = `
           <div class="wage-card-name">👤 ${p.name}</div>
-          <div class="wage-card-detail">${p.shifts} กะ × ${numFmt(wages[p.name])} / กะ</div>
-          <div class="wage-card-detail">โบนัสช่วยพิเศษ: ${numFmt(p.bonus)}</div>
-          <div class="wage-card-amount">${numFmt(p.amount)}</div>
+          ${details}
+          <div class="wage-card-amount">รวม ${p.total} กะ</div>
         `;
 
         cardsEl.appendChild(card);
@@ -1695,8 +1706,8 @@
         resultEl.style.display = 'none';
       } else {
         resultEl.style.display = 'block';
-        renderWageCards(cardsEl, list);
-        totalEl.textContent = numFmt(total);
+        renderWageCards(cardsEl, list, id);
+        totalEl.textContent = `${total} กะ`;
       }
 
       renderCatPageAllWages();
@@ -1714,17 +1725,16 @@
 
       if (sala.list.length > 0) {
         salaBox.style.display = 'block';
-        renderWageCards(salaCards, sala.list);
-        salaTotal.textContent = numFmt(sala.total);
+        renderWageCards(salaCards, sala.list, 'sala');
+        salaTotal.textContent = `${sala.total} กะ`;
       } else {
         salaBox.style.display = 'none';
       }
 
       const grandTotal = cat.total + sala.total;
-
       if (grandTotal > 0) {
         allBox.style.display = 'block';
-        allTotal.textContent = numFmt(grandTotal);
+        allTotal.textContent = `${grandTotal} กะ`;
       } else {
         allBox.style.display = 'none';
       }
@@ -1737,13 +1747,7 @@
       const allPeople = getAllPeople();
 
       allPeople.forEach(name => {
-        if (wages[name] === undefined) {
-          wages[name] = 0;
-        }
-
-        if (!PERSON_COLORS[name]) {
-          PERSON_COLORS[name] = 'sky';
-        }
+        if (!PERSON_COLORS[name]) PERSON_COLORS[name] = 'sky';
 
         const label = document.createElement('div');
         label.className = 'wage-label-cell';
@@ -1755,18 +1759,7 @@
         `;
 
         const inputWrap = document.createElement('div');
-        inputWrap.className = 'wage-input-cell';
-
-        const inp = document.createElement('input');
-        inp.type = 'number';
-        inp.className = 'wage-input';
-        inp.min = 0;
-        inp.id = `wage-inp-${name}`;
-        inp.value = wages[name] || 0;
-
-        const unit = document.createElement('span');
-        unit.className = 'wage-unit';
-        unit.textContent = 'บาท/กะ';
+        inputWrap.className = 'wage-input-cell employee-manage-cell';
 
         const colorSel = document.createElement('select');
         colorSel.className = 'color-select';
@@ -1781,10 +1774,27 @@
           if (state.sala.saved) renderSaved('sala');
           buildWageGrid();
         });
+        colorSel.style.flex = '1 1 150px';
 
-        inputWrap.appendChild(inp);
-        inputWrap.appendChild(unit);
         inputWrap.appendChild(colorSel);
+
+        ['cat','sala'].forEach(house => {
+          if (!PEOPLE[house].includes(name)) return;
+
+          const tag = document.createElement('span');
+          tag.className = 'employee-house-tag';
+          tag.textContent = house === 'cat' ? '🐱 บ้านแคท' : '🥟 บ้านซาลาเปา';
+          inputWrap.appendChild(tag);
+
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'employee-delete-btn';
+          delBtn.textContent = '🗑️ ลบ';
+          delBtn.title = `ลบ ${name} ออกจาก${house === 'cat' ? 'บ้านแคท' : 'บ้านซาลาเปา'}`;
+          delBtn.onclick = () => deleteEmployee(name, house);
+          inputWrap.appendChild(delBtn);
+        });
+
         grid.appendChild(label);
         grid.appendChild(inputWrap);
       });
@@ -1845,15 +1855,73 @@
       showToast('✅ เพิ่มพนักงานแล้ว');
     }
 
+    async function deleteEmployee(name, house) {
+      const houseLabel = house === 'cat' ? 'บ้านแคท' : 'บ้านซาลาเปา';
+
+      if (!PEOPLE[house] || !PEOPLE[house].includes(name)) {
+        showToast('⚠️ ไม่พบพนักงานในบ้านนี้');
+        return;
+      }
+
+      const ok = confirm(`ยืนยันลบ “${name}” ออกจาก${houseLabel} ?\n\nกะของ ${name} ในสัปดาห์ที่กำลังเปิดของบ้านนี้จะถูกล้างออกด้วย`);
+      if (!ok) return;
+
+      PEOPLE[house] = PEOPLE[house].filter(p => p !== name);
+
+      // ล้างชื่อคนนี้ออกจากตารางสัปดาห์ที่กำลังเปิดของบ้านที่ลบ
+      if (state[house]?.saved?.data) {
+        state[house].saved.data.forEach(row => {
+          Object.keys(row || {}).forEach(key => {
+            if (row[key] === name) row[key] = '';
+          });
+        });
+      }
+
+      // ถ้าชื่อนี้ไม่เหลืออยู่ในบ้านไหนแล้ว ให้ลบสี/ข้อมูลเก่าของชื่อด้วย
+      const stillExists = PEOPLE.cat.includes(name) || PEOPLE.sala.includes(name);
+      if (!stillExists) {
+        delete PERSON_COLORS[name];
+        if (typeof wages === 'object' && wages) delete wages[name];
+      }
+
+      savePeopleLocal();
+
+      buildTable('cat');
+      buildTable('sala');
+
+      if (state[house]?.saved) {
+        setScheduleInputs(house, state[house].saved.data);
+        renderSaved(house);
+
+        await apiPost({
+          action: 'saveSchedule',
+          key: scheduleKey(house),
+          house,
+          week: weekKey(state[house].monday),
+          data: state[house].saved.data
+        });
+      }
+
+      if (state.cat.saved) renderSaved('cat');
+      if (state.sala.saved) renderSaved('sala');
+      buildWageGrid();
+
+      await apiPost({
+        action: 'saveWages',
+        data: {
+          ...wages,
+          __people: PEOPLE,
+          __colors: PERSON_COLORS
+        }
+      });
+
+      showToast(`🗑️ ลบ ${name} ออกจาก${houseLabel} แล้ว`);
+    }
+
     async function saveWages() {
       const allPeople = getAllPeople();
 
       allPeople.forEach(name => {
-        const inp = document.getElementById(`wage-inp-${name}`);
-        if (inp) {
-          wages[name] = parseFloat(inp.value) || 0;
-        }
-
         const colorInp = document.getElementById(`color-inp-${name}`);
         if (colorInp) {
           PERSON_COLORS[name] = colorInp.value || 'sky';
@@ -1868,7 +1936,7 @@
 
       savePeopleLocal();
 
-      showToast('💾 กำลังบันทึกค่าแรง...');
+      showToast('💾 กำลังบันทึกข้อมูลพนักงาน...');
 
       await apiPost({
         action: 'saveWages',
@@ -1879,7 +1947,7 @@
         }
       });
 
-      showToast('✅ บันทึกค่าแรงลง Google Sheet แล้ว');
+      showToast('✅ บันทึกข้อมูลพนักงานแล้ว');
     }
 
     async function apiPost(payload) {
@@ -1917,7 +1985,6 @@
         sel.className = 'shift-sel' + (cls ? ` ${cls}` : '');
       });
 
-      updateAllAutoThreeNoi(id);
     }
 
     async function loadSchedule(id) {
